@@ -1,75 +1,220 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <meta charset="UTF-8">
-    <title>LohasVLG - 樂活碎片生活</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Noto+Sans+TC:wght@300;500;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
-    <style>
-        :root { --accent-gradient: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); --bg: #0A0A0A; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Outfit', 'Noto Sans TC', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        #vlg-standalone-root { width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 40px; padding: 40px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        h2 { font-weight: 900; letter-spacing: -1px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
-        #vlg-video-player { width: 100%; height: 220px; background: #000; border-radius: 25px; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 30px; object-fit: cover; }
-        .vlg-controls { display: flex; gap: 20px; justify-content: center; }
-        .vlg-action-btn { width: 70px; height: 70px; border-radius: 25px; border: none; cursor: pointer; transition: all 0.3s; font-weight: 800; font-size: 0.8rem; }
-        #vlg-start-btn { background: #fff; color: #000; }
-        #vlg-generate-btn { background: #3b82f6; color: white; }
-        .vlg-action-btn:active { transform: scale(0.9); }
-        #vlg-log-history { margin-top: 30px; color: rgba(255,255,255,0.5); font-weight: 500; }
-    </style>
+<meta charset="UTF-8">
+<title>LohasVLG - 樂活碎片生活</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Noto+Sans+TC:wght@300;500;900&display=swap" rel="stylesheet">
+
+<style>
+:root { --bg-base: #FF9A9E; }
+
+body { 
+    margin: 0;
+    background: var(--bg-base);
+    transition: all 0.8s ease;
+    font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+#vlg-standalone-root { 
+    width: 90%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+#mascot-display { font-size: 4rem; margin-bottom: 5px; }
+
+#vlg-status-text {
+    font-weight: 900;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+#vlg-video-player {
+    width: 100%;
+    height: 200px;
+    background: #000;
+    border-radius: 30px;
+    margin-bottom: 25px;
+    object-fit: cover;
+    border: 6px solid #fff;
+}
+
+.vlg-controls {
+    display: flex;
+    gap: 15px;
+}
+
+.vlg-action-btn {
+    flex: 1;
+    padding: 20px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+#vlg-start-btn { background: #000; color: #fff; }
+#vlg-generate-btn { background: #f0f0f0; color: #333; }
+
+.vlg-action-btn:hover { transform: translateY(-5px); }
+
+footer {
+    margin-top:20px;
+    color:#888;
+}
+</style>
 </head>
+
 <body>
 
-    <main id="vlg-standalone-root">
-        <header><h2>樂活碎片生活</h2></header>
-        <div id="vlg-video-container">
-            <video id="vlg-video-player" autoplay playsinline muted></video>
-        </div>
-        <div class="vlg-controls">
-            <button id="vlg-start-btn" class="vlg-action-btn" onclick="LohasVLG.startCapture()">記錄</button>
-            <button id="vlg-generate-btn" class="vlg-action-btn" onclick="LohasVLG.generateVlog()">合成</button>
-        </div>
-        <footer id="vlg-log-history">今日已捕獲第 <span id="vlg-count">0</span> 段時光</footer>
-    </main>
+<main id="vlg-standalone-root">
+    <div id="mascot-display">🐢</div>
+    <div id="vlg-status-text">LohasVLG - 樂活碎片生活</div>
 
-    <script>
-        const { createFFmpeg } = FFmpeg;
-        const ffmpeg = createFFmpeg({ log: true });
+    <video id="vlg-video-player" autoplay playsinline muted></video>
 
-        const LohasVLG = {
-            db: null, mediaRecorder: null, chunks: [], count: 0, stream: null,
+    <div class="vlg-controls">
+        <button id="vlg-start-btn" class="vlg-action-btn">記錄閃光</button>
+        <button id="vlg-generate-btn" class="vlg-action-btn">生成日記</button>
+    </div>
 
-            async init() {
-                const request = indexedDB.open('LohasVLG_Store', 1);
-                request.onupgradeneeded = (e) => { e.target.result.createObjectStore('fragments', { keyPath: 'id', autoIncrement: true }); };
-                request.onsuccess = (e) => { this.db = e.target.result; };
-                this.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                document.getElementById('vlg-video-player').srcObject = this.stream;
-            },
+    <footer>
+        已蒐集：<span id="vlg-count">0</span> / 3 個碎片
+    </footer>
+</main>
 
-            startCapture() {
-                this.chunks = [];
-                this.mediaRecorder = new MediaRecorder(this.stream);
-                this.mediaRecorder.ondataavailable = (e) => this.chunks.push(e.data);
-                this.mediaRecorder.onstop = async () => {
-                    const blob = new Blob(this.chunks, { type: 'video/mp4' });
-                    const tx = this.db.transaction(['fragments'], 'readwrite');
-                    tx.objectStore('fragments').add({ blob, timestamp: Date.now() });
-                    this.count++;
-                    document.getElementById('vlg-count').innerText = this.count;
-                };
-                this.mediaRecorder.start();
-                setTimeout(() => this.mediaRecorder.stop(), 3000); // 強制錄製 3 秒
-            },
+<script>
+const themes = [
+    { bg: '#FF9A9E', icon: '🐢', msg: '捕捉今天的烏龜慢活片刻！' },
+    { bg: '#A1C4FD', icon: '🐬', msg: '像海豚一樣跳進樂活圈！' },
+    { bg: '#D4FC79', icon: '🎈', msg: '好心情像氣球升空！' }
+];
 
-            async generateVlog() {
-                if (!ffmpeg.isLoaded()) await ffmpeg.load();
-                alert("正在啟動合成引擎...");
-                // 此處為 FFmpeg 合成邏輯擴充點
-            }
+const LohasVLG = {
+    count: 0,
+    db: null,
+    stream: null,
+    recorder: null,
+    chunks: [],
+
+    async init() {
+        // 初始化資料庫
+        const req = indexedDB.open('LohasVLG_Store', 1);
+        req.onupgradeneeded = (e) => {
+            e.target.result.createObjectStore('fragments', { autoIncrement: true });
         };
-        LohasVLG.init();
-    </script>
+        req.onsuccess = (e) => this.db = e.target.result;
+
+        // 開啟攝影機
+        this.stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        });
+
+        document.getElementById('vlg-video-player').srcObject = this.stream;
+    },
+
+    trigger() {
+        if (this.count >= 3) {
+            alert("✅ 已收集滿 3 個碎片！");
+            return;
+        }
+
+        const theme = themes[Math.floor(Math.random() * themes.length)];
+
+        document.body.style.background = theme.bg;
+        document.getElementById('mascot-display').innerText = theme.icon;
+        document.getElementById('vlg-status-text').innerText = theme.msg;
+
+        this.recordClip();
+    },
+
+    recordClip() {
+        this.chunks = [];
+
+        this.recorder = new MediaRecorder(this.stream);
+
+        this.recorder.ondataavailable = (e) => {
+            this.chunks.push(e.data);
+        };
+
+        this.recorder.onstop = () => {
+            const blob = new Blob(this.chunks, { type: 'video/webm' });
+            this.saveFragment(blob);
+        };
+
+        this.recorder.start();
+
+        // 錄影 3 秒
+        setTimeout(() => {
+            this.recorder.stop();
+        }, 3000);
+    },
+
+    saveFragment(blob) {
+        const tx = this.db.transaction('fragments', 'readwrite');
+        const store = tx.objectStore('fragments');
+        store.add(blob);
+
+        this.count++;
+        document.getElementById('vlg-count').innerText = this.count;
+
+        console.log("✅ 已儲存片段");
+    },
+
+    async getFragments() {
+        return new Promise((resolve) => {
+            const tx = this.db.transaction('fragments', 'readonly');
+            const store = tx.objectStore('fragments');
+            const req = store.getAll();
+
+            req.onsuccess = () => resolve(req.result);
+        });
+    },
+
+    async generate() {
+        if (this.count < 3) {
+            alert("⚠️ 請先收集 3 個碎片！");
+            return;
+        }
+
+        alert("🎬 正在生成你的樂活日記...");
+
+        const fragments = await this.getFragments();
+
+        // 簡單拼接影片
+        const finalBlob = new Blob(fragments, { type: 'video/webm' });
+
+        const url = URL.createObjectURL(finalBlob);
+
+        const video = document.getElementById('vlg-video-player');
+        video.srcObject = null;
+        video.src = url;
+        video.controls = true;
+
+        document.getElementById('vlg-status-text').innerText = "🎉 日記完成！";
+    }
+};
+
+// 綁定按鈕
+document.getElementById("vlg-start-btn").onclick = () => LohasVLG.trigger();
+document.getElementById("vlg-generate-btn").onclick = () => LohasVLG.generate();
+
+// 啟動
+LohasVLG.init();
+</script>
+
 </body>
 </html>
