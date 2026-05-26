@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <title>LohasVLG - 樂活碎片生活</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Noto+Sans+TC:wght@300;500;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <style>
+        :root { --accent-gradient: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); --bg: #0A0A0A; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Outfit', 'Noto Sans TC', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        #vlg-standalone-root { width: 90%; max-width: 400px; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 40px; padding: 40px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        h2 { font-weight: 900; letter-spacing: -1px; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 30px; }
+        #vlg-video-player { width: 100%; height: 220px; background: #000; border-radius: 25px; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 30px; object-fit: cover; }
+        .vlg-controls { display: flex; gap: 20px; justify-content: center; }
+        .vlg-action-btn { width: 70px; height: 70px; border-radius: 25px; border: none; cursor: pointer; transition: all 0.3s; font-weight: 800; font-size: 0.8rem; }
+        #vlg-start-btn { background: #fff; color: #000; }
+        #vlg-generate-btn { background: #3b82f6; color: white; }
+        .vlg-action-btn:active { transform: scale(0.9); }
+        #vlg-log-history { margin-top: 30px; color: rgba(255,255,255,0.5); font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <main id="vlg-standalone-root">
+        <header><h2>樂活碎片生活</h2></header>
+        <div id="vlg-video-container">
+            <video id="vlg-video-player" autoplay playsinline muted></video>
+        </div>
+        <div class="vlg-controls">
+            <button id="vlg-start-btn" class="vlg-action-btn" onclick="LohasVLG.startCapture()">記錄</button>
+            <button id="vlg-generate-btn" class="vlg-action-btn" onclick="LohasVLG.generateVlog()">合成</button>
+        </div>
+        <footer id="vlg-log-history">今日已捕獲第 <span id="vlg-count">0</span> 段時光</footer>
+    </main>
+
+    <script>
+        const { createFFmpeg } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true });
+
+        const LohasVLG = {
+            db: null, mediaRecorder: null, chunks: [], count: 0, stream: null,
+
+            async init() {
+                const request = indexedDB.open('LohasVLG_Store', 1);
+                request.onupgradeneeded = (e) => { e.target.result.createObjectStore('fragments', { keyPath: 'id', autoIncrement: true }); };
+                request.onsuccess = (e) => { this.db = e.target.result; };
+                this.stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                document.getElementById('vlg-video-player').srcObject = this.stream;
+            },
+
+            startCapture() {
+                this.chunks = [];
+                this.mediaRecorder = new MediaRecorder(this.stream);
+                this.mediaRecorder.ondataavailable = (e) => this.chunks.push(e.data);
+                this.mediaRecorder.onstop = async () => {
+                    const blob = new Blob(this.chunks, { type: 'video/mp4' });
+                    const tx = this.db.transaction(['fragments'], 'readwrite');
+                    tx.objectStore('fragments').add({ blob, timestamp: Date.now() });
+                    this.count++;
+                    document.getElementById('vlg-count').innerText = this.count;
+                };
+                this.mediaRecorder.start();
+                setTimeout(() => this.mediaRecorder.stop(), 3000); // 強制錄製 3 秒
+            },
+
+            async generateVlog() {
+                if (!ffmpeg.isLoaded()) await ffmpeg.load();
+                alert("正在啟動合成引擎...");
+                // 此處為 FFmpeg 合成邏輯擴充點
+            }
+        };
+        LohasVLG.init();
+    </script>
+</body>
+</html>
