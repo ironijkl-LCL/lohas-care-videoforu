@@ -2,197 +2,249 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-<title>LohasVLG Pro - AI樂活日記</title>
-
-<link rel="manifest" href="manifest.json">
+<title>LohasVLG IG Pro</title>
 
 <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 
 <style>
-body {
+body{
     margin:0;
+    background:black;
+    overflow:hidden;
     font-family:sans-serif;
+}
+
+/* 相機畫面 */
+video{
+    position:fixed;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:0.4s;
+}
+
+/* UI */
+#ui{
+    position:fixed;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+/* 上方 */
+#top{
+    display:flex;
+    justify-content:space-between;
+    padding:20px;
+    color:white;
+}
+
+/* 下方 */
+#bottom{
     display:flex;
     justify-content:center;
     align-items:center;
-    height:100vh;
-    background:#FF9A9E;
-    transition: all 0.6s;
+    padding:30px;
 }
 
-main{
-    width:90%;
-    max-width:400px;
+/* 錄影鍵 */
+#recordBtn{
+    width:80px;
+    height:80px;
+    border-radius:50%;
     background:white;
-    padding:25px;
-    border-radius:30px;
+    border:5px solid rgba(255,255,255,0.5);
+}
+
+/* 對焦動畫 */
+#focus{
+    position:absolute;
+    width:80px;
+    height:80px;
+    border:2px solid white;
+    border-radius:50%;
+    opacity:0;
+}
+
+/* AI文字 */
+#aiText{
     text-align:center;
+    color:white;
 }
 
-#mascot{
-    font-size:4rem;
-    animation:bounce 1s infinite alternate;
+/* 動畫 */
+@keyframes focusAnim{
+    0%{opacity:1; transform:scale(1.5);}
+    100%{opacity:0; transform:scale(1);}
 }
 
-@keyframes bounce {
-    from {transform:translateY(0);}
-    to {transform:translateY(-10px);}
-}
-
-video{
-    width:100%;
-    height:200px;
-    border-radius:20px;
-    background:black;
-    margin:20px 0;
-    object-fit:cover;
-    transition:0.5s;
-}
-
-button{
-    width:45%;
-    padding:10px;
-    border:none;
-    border-radius:15px;
-    margin:5px;
-    font-weight:bold;
-}
-
-#ai{
-    color:#555;
-    margin:10px 0;
+.showFocus{
+    animation:focusAnim 0.6s;
 }
 </style>
 </head>
 
 <body>
 
-<main>
-    <div id="mascot">🐢</div>
-    <div id="msg">AI 樂活日記</div>
+<video id="video" autoplay playsinline muted></video>
 
-    <video id="video" autoplay muted playsinline></video>
+<div id="ui">
 
-    <div>
-        <button onclick="app.trigger()">記錄</button>
-        <button onclick="app.generate()">生成</button>
+    <div id="top">
+        <div id="switchBtn">🔄</div>
+        <div id="aiText">✨ 準備捕捉生活</div>
+        <div id="mode">🎬</div>
     </div>
 
-    <div id="ai">✨ 今天會發生什麼美好呢？</div>
+    <div id="bottom">
+        <div id="recordBtn"></div>
+    </div>
 
-    <div>已蒐集：<span id="count">0</span>/3</div>
-</main>
+</div>
+
+<div id="focus"></div>
 
 <audio id="bgm" loop></audio>
 
 <script>
-const { createFFmpeg, fetchFile } = FFmpeg;
+const video = document.getElementById("video");
+const focus = document.getElementById("focus");
+const aiText = document.getElementById("aiText");
+const bgm = document.getElementById("bgm");
+const recordBtn = document.getElementById("recordBtn");
 
 const themes = [
-    { bg:'#FF9A9E', icon:'🐢', msg:'慢活', filter:'sepia(.3)', music:'slow.mp3' },
-    { bg:'#A1C4FD', icon:'🐬', msg:'自由', filter:'contrast(1.2)', music:'free.mp3' },
-    { bg:'#FFF3B0', icon:'🌞', msg:'陽光', filter:'brightness(1.2)', music:'happy.mp3' },
-    { bg:'#C7CEEA', icon:'🌙', msg:'夜晚', filter:'brightness(.7)', music:'night.mp3' }
+    { msg:"慢活 🌿", filter:"sepia(.3)", music:"slow.mp3" },
+    { msg:"自由 🌊", filter:"contrast(1.2)", music:"free.mp3" },
+    { msg:"開心 ☀️", filter:"brightness(1.2)", music:"happy.mp3" },
+    { msg:"夜晚 🌙", filter:"brightness(.6)", music:"night.mp3" },
+    { msg:"夢幻 ✨", filter:"saturate(1.5)", music:"dream.mp3" }
 ];
 
-// ✅ AI 模擬（如接 API 可替換）
-function fakeAI(msg){
-    const arr = [
-        `今天的我，有點${msg}的味道`,
-        `生活輕聲說：${msg}`,
-        `我正在慢慢感受 ${msg}`,
-        `這一刻，很 ${msg}`
+// ✅ AI句子
+function AItext(msg){
+    const list=[
+        `這一刻，很${msg}`,
+        `生活正在慢慢 ${msg}`,
+        `今天被${msg}填滿`,
+        `把這份${msg}收好`,
     ];
-    return arr[Math.floor(Math.random()*arr.length)];
+    return list[Math.floor(Math.random()*list.length)];
 }
 
 const app = {
     stream:null,
+    facing:"user",
+    zoom:1,
+    recorder:null,
     chunks:[],
-    clips:[],
-    count:0,
 
-    async init(){
-        this.stream = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+    async start(){
+        if(this.stream){
+            this.stream.getTracks().forEach(t=>t.stop());
+        }
+
+        this.stream = await navigator.mediaDevices.getUserMedia({
+            video:{ facingMode:this.facing },
+            audio:true
+        });
+
         video.srcObject = this.stream;
 
-        // ✅ PWA SW
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+        // 自拍鏡像
+        video.style.transform = this.facing==="user" ? "scaleX(-1)" : "none";
     },
 
-    trigger(){
-        if(this.count>=3) return alert("已滿");
+    async switchCamera(){
+        this.facing = this.facing==="user" ? "environment":"user";
+        await this.start();
+    },
 
+    applyTheme(){
         const t = themes[Math.floor(Math.random()*themes.length)];
 
-        document.body.style.background = t.bg;
-        mascot.innerText = t.icon;
-        msg.innerText = t.msg;
         video.style.filter = t.filter;
+        aiText.innerText = AItext(t.msg);
 
-        ai.innerText = fakeAI(t.msg);
-
-        // 🎵 音樂
         bgm.src = t.music;
         bgm.play().catch(()=>{});
-
-        this.record();
-    },
-
-    record(){
-        this.chunks = [];
-
-        const rec = new MediaRecorder(this.stream);
-        rec.ondataavailable = e => this.chunks.push(e.data);
-
-        rec.onstop = ()=>{
-            this.clips.push(new Blob(this.chunks));
-            this.count++;
-            count.innerText = this.count;
-        };
-
-        rec.start();
-        setTimeout(()=>rec.stop(),3000);
-    },
-
-    async generate(){
-        if(this.count<3) return alert("請錄滿3段");
-
-        const ffmpeg = createFFmpeg({ log:true });
-        await ffmpeg.load();
-
-        for(let i=0;i<this.clips.length;i++){
-            ffmpeg.FS('writeFile', `v${i}.webm`, await fetchFile(this.clips[i]));
-        }
-
-        await ffmpeg.run(
-            '-i','v0.webm','-i','v1.webm','-i','v2.webm',
-            '-filter_complex',
-            '[0:v][1:v][2:v]concat=n=3:v=1:a=0',
-            'out.mp4'
-        );
-
-        const data = ffmpeg.FS('readFile','out.mp4');
-        const url = URL.createObjectURL(new Blob([data.buffer],{type:'video/mp4'}));
-
-        video.srcObject = null;
-        video.src = url;
-        video.controls = true;
-
-        // ✅ 分享
-        if(navigator.share){
-            const file = new File([data.buffer],"lohas.mp4",{type:"video/mp4"});
-            navigator.share({
-                title:"我的樂活日記",
-                files:[file]
-            });
-        }
     }
 };
 
-app.init();
+app.start();
+
+/* ✅ TAP 對焦 */
+document.body.addEventListener("click",(e)=>{
+    focus.style.left=(e.clientX-40)+"px";
+    focus.style.top=(e.clientY-40)+"px";
+    focus.classList.add("showFocus");
+
+    setTimeout(()=>focus.classList.remove("showFocus"),600);
+});
+
+/* ✅ 手勢切鏡頭 */
+let startX=0;
+
+document.body.addEventListener("touchstart",(e)=>{
+    startX = e.touches[0].clientX;
+});
+
+document.body.addEventListener("touchend",(e)=>{
+    let dx = e.changedTouches[0].clientX - startX;
+
+    if(Math.abs(dx)>80){
+        app.switchCamera();
+    }
+});
+
+/* ✅ Zoom（上下滑） */
+document.body.addEventListener("touchmove",(e)=>{
+    let y = e.touches[0].clientY;
+    app.zoom += y*0.00005;
+
+    app.zoom = Math.max(1,Math.min(3,app.zoom));
+
+    video.style.transform = `scale(${app.zoom})`;
+});
+
+/* ✅ 錄影 */
+recordBtn.addEventListener("mousedown", startRecord);
+recordBtn.addEventListener("mouseup", stopRecord);
+
+recordBtn.addEventListener("touchstart", startRecord);
+recordBtn.addEventListener("touchend", stopRecord);
+
+function startRecord(){
+    app.chunks=[];
+
+    app.recorder = new MediaRecorder(app.stream);
+    app.recorder.ondataavailable=e=>app.chunks.push(e.data);
+
+    app.recorder.start();
+
+    recordBtn.style.background="red";
+
+    app.applyTheme(); // ✅ 套主題
+}
+
+function stopRecord(){
+    app.recorder.stop();
+
+    app.recorder.onstop=()=>{
+        const blob = new Blob(app.chunks);
+
+        video.srcObject=null;
+        video.src=URL.createObjectURL(blob);
+        video.controls=true;
+    };
+
+    recordBtn.style.background="white";
+}
+
+/* ✅ 手動切鏡頭 */
+document.getElementById("switchBtn").onclick=()=>app.switchCamera();
 </script>
 
 </body>
