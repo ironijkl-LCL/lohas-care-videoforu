@@ -2,249 +2,139 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-<title>LohasVLG IG Pro</title>
-
-<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+<title>LohasVLG Camera FIX FINAL</title>
 
 <style>
 body{
     margin:0;
     background:black;
     overflow:hidden;
-    font-family:sans-serif;
 }
 
-/* 相機畫面 */
+/* video */
 video{
     position:fixed;
     width:100%;
     height:100%;
     object-fit:cover;
-    transition:0.4s;
 }
 
 /* UI */
-#ui{
+#startUI{
     position:fixed;
     width:100%;
     height:100%;
     display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-}
-
-/* 上方 */
-#top{
-    display:flex;
-    justify-content:space-between;
-    padding:20px;
-    color:white;
-}
-
-/* 下方 */
-#bottom{
-    display:flex;
     justify-content:center;
     align-items:center;
-    padding:30px;
-}
-
-/* 錄影鍵 */
-#recordBtn{
-    width:80px;
-    height:80px;
-    border-radius:50%;
-    background:white;
-    border:5px solid rgba(255,255,255,0.5);
-}
-
-/* 對焦動畫 */
-#focus{
-    position:absolute;
-    width:80px;
-    height:80px;
-    border:2px solid white;
-    border-radius:50%;
-    opacity:0;
-}
-
-/* AI文字 */
-#aiText{
-    text-align:center;
+    background:black;
     color:white;
+    z-index:10;
+    font-size:1.5rem;
 }
 
-/* 動畫 */
-@keyframes focusAnim{
-    0%{opacity:1; transform:scale(1.5);}
-    100%{opacity:0; transform:scale(1);}
-}
-
-.showFocus{
-    animation:focusAnim 0.6s;
+#btnStart{
+    padding:20px;
+    border-radius:20px;
+    background:white;
+    color:black;
 }
 </style>
 </head>
 
 <body>
 
-<video id="video" autoplay playsinline muted></video>
-
-<div id="ui">
-
-    <div id="top">
-        <div id="switchBtn">🔄</div>
-        <div id="aiText">✨ 準備捕捉生活</div>
-        <div id="mode">🎬</div>
-    </div>
-
-    <div id="bottom">
-        <div id="recordBtn"></div>
-    </div>
-
+<div id="startUI">
+    <button id="btnStart">啟動相機</button>
 </div>
 
-<div id="focus"></div>
-
-<audio id="bgm" loop></audio>
+<video id="video" playsinline muted></video>
 
 <script>
 const video = document.getElementById("video");
-const focus = document.getElementById("focus");
-const aiText = document.getElementById("aiText");
-const bgm = document.getElementById("bgm");
-const recordBtn = document.getElementById("recordBtn");
-
-const themes = [
-    { msg:"慢活 🌿", filter:"sepia(.3)", music:"slow.mp3" },
-    { msg:"自由 🌊", filter:"contrast(1.2)", music:"free.mp3" },
-    { msg:"開心 ☀️", filter:"brightness(1.2)", music:"happy.mp3" },
-    { msg:"夜晚 🌙", filter:"brightness(.6)", music:"night.mp3" },
-    { msg:"夢幻 ✨", filter:"saturate(1.5)", music:"dream.mp3" }
-];
-
-// ✅ AI句子
-function AItext(msg){
-    const list=[
-        `這一刻，很${msg}`,
-        `生活正在慢慢 ${msg}`,
-        `今天被${msg}填滿`,
-        `把這份${msg}收好`,
-    ];
-    return list[Math.floor(Math.random()*list.length)];
-}
 
 const app = {
     stream:null,
     facing:"user",
     zoom:1,
-    recorder:null,
-    chunks:[],
 
-    async start(){
-        if(this.stream){
-            this.stream.getTracks().forEach(t=>t.stop());
+    async startCamera(){
+        try{
+            // 停掉舊 stream
+            if(this.stream){
+                this.stream.getTracks().forEach(t => t.stop());
+            }
+
+            let constraints = {
+                video:{
+                    facingMode: this.facing
+                },
+                audio:true
+            };
+
+            // ✅ iPhone fallback
+            try {
+                this.stream = await navigator.mediaDevices.getUserMedia(constraints);
+            } catch(e) {
+                this.stream = await navigator.mediaDevices.getUserMedia({
+                    video:true,
+                    audio:true
+                });
+            }
+
+            video.srcObject = this.stream;
+
+            // ✅ 必須 play()
+            await video.play();
+
+            this.applyTransform();
+
+            console.log("✅ Camera 已啟動");
+        }catch(err){
+            alert("❌ 無法開啟相機: " + err.message);
         }
+    },
 
-        this.stream = await navigator.mediaDevices.getUserMedia({
-            video:{ facingMode:this.facing },
-            audio:true
-        });
-
-        video.srcObject = this.stream;
-
-        // 自拍鏡像
-        video.style.transform = this.facing==="user" ? "scaleX(-1)" : "none";
+    applyTransform(){
+        const mirror = this.facing==="user" ? "scaleX(-1)" : "";
+        video.style.transform = `${mirror} scale(${this.zoom})`;
     },
 
     async switchCamera(){
-        this.facing = this.facing==="user" ? "environment":"user";
-        await this.start();
-    },
-
-    applyTheme(){
-        const t = themes[Math.floor(Math.random()*themes.length)];
-
-        video.style.filter = t.filter;
-        aiText.innerText = AItext(t.msg);
-
-        bgm.src = t.music;
-        bgm.play().catch(()=>{});
+        this.facing = this.facing==="user" ? "environment" : "user";
+        await this.startCamera();
     }
 };
 
-app.start();
+// ✅ 必須用按鈕觸發（iPhone必要）
+document.getElementById("btnStart").onclick = async ()=>{
+    document.getElementById("startUI").style.display="none";
 
-/* ✅ TAP 對焦 */
-document.body.addEventListener("click",(e)=>{
-    focus.style.left=(e.clientX-40)+"px";
-    focus.style.top=(e.clientY-40)+"px";
-    focus.classList.add("showFocus");
+    await app.startCamera();
+};
 
-    setTimeout(()=>focus.classList.remove("showFocus"),600);
+/* ✅ 手勢：Zoom */
+let lastY=0;
+video.addEventListener("touchstart", e=>{
+    lastY = e.touches[0].clientY;
 });
 
-/* ✅ 手勢切鏡頭 */
-let startX=0;
-
-document.body.addEventListener("touchstart",(e)=>{
-    startX = e.touches[0].clientX;
-});
-
-document.body.addEventListener("touchend",(e)=>{
-    let dx = e.changedTouches[0].clientX - startX;
-
-    if(Math.abs(dx)>80){
-        app.switchCamera();
-    }
-});
-
-/* ✅ Zoom（上下滑） */
-document.body.addEventListener("touchmove",(e)=>{
+video.addEventListener("touchmove", e=>{
     let y = e.touches[0].clientY;
-    app.zoom += y*0.00005;
+    let delta = y - lastY;
 
-    app.zoom = Math.max(1,Math.min(3,app.zoom));
+    app.zoom += delta * 0.005;
+    app.zoom = Math.max(1, Math.min(3, app.zoom));
 
-    video.style.transform = `scale(${app.zoom})`;
+    app.applyTransform();
+    lastY = y;
 });
 
-/* ✅ 錄影 */
-recordBtn.addEventListener("mousedown", startRecord);
-recordBtn.addEventListener("mouseup", stopRecord);
+/* ✅ 點擊切鏡頭（測試用） */
+video.addEventListener("dblclick", ()=>{
+    app.switchCamera();
+});
 
-recordBtn.addEventListener("touchstart", startRecord);
-recordBtn.addEventListener("touchend", stopRecord);
-
-function startRecord(){
-    app.chunks=[];
-
-    app.recorder = new MediaRecorder(app.stream);
-    app.recorder.ondataavailable=e=>app.chunks.push(e.data);
-
-    app.recorder.start();
-
-    recordBtn.style.background="red";
-
-    app.applyTheme(); // ✅ 套主題
-}
-
-function stopRecord(){
-    app.recorder.stop();
-
-    app.recorder.onstop=()=>{
-        const blob = new Blob(app.chunks);
-
-        video.srcObject=null;
-        video.src=URL.createObjectURL(blob);
-        video.controls=true;
-    };
-
-    recordBtn.style.background="white";
-}
-
-/* ✅ 手動切鏡頭 */
-document.getElementById("switchBtn").onclick=()=>app.switchCamera();
 </script>
 
 </body>
