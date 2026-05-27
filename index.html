@@ -88,7 +88,7 @@ body {
     display: none;
 }
 
-/* ✨ Mascot 區塊 */
+/* ✨ Mascot 區塊優化：左右對稱公仔鍵排版 */
 .mascot-container {
     display: flex;
     align-items: center;
@@ -128,14 +128,14 @@ body {
     to { transform: translateY(-6px); }
 }
 
-/* 🎬 核心相機/預覽區域 */
+/* 🎬 核心相機/預覽區域外層包裹器 */
 .camera-preview-wrapper {
     position: relative;
     width: 100%;
     margin-bottom: 15px;
 }
 
-/* 🏷️ 左上角半透明標籤 */
+/* 🏷️ 狀態標籤：左上角半透明黑色浮動標籤樣式 */
 .camera-status-tag {
     position: absolute;
     top: 15px;
@@ -169,6 +169,7 @@ body {
     to { opacity: 0; }
 }
 
+/* 🎬 鏡頭預覽主體：極具質感的粉紅色圓角粗外框 */
 #vlg-video-player {
     width: 100%;
     height: 240px;
@@ -182,6 +183,7 @@ body {
     box-sizing: border-box;
 }
 
+/* 🛠️ 嵌入在預覽區域內部的功能按鍵標籤 */
 .camera-mode-selectors {
     position: absolute;
     bottom: 15px;
@@ -361,100 +363,152 @@ button {
 .code-input-field::placeholder { color: #ccc; }
 .code-submit-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-pink); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; }
 
-/* 🌟 新增：完美復刻最後一張附圖的「手記播放與字幕編輯區域」面層 🌟 */
-#overlay-view-log {
+/* 🌟 復刻手記與字幕編輯全螢幕面層 🌟 */
+#overlay-view-log { background: #000000; }
+.log-view-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.log-view-nav-left { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; font-weight: bold; }
+.log-view-icons-right { display: flex; gap: 12px; }
+.log-view-icon-btn { background: transparent; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 4px; }
+.log-video-card { width: 100%; background: #111112; border-radius: 24px; overflow: hidden; position: relative; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.03); }
+.log-user-info { display: flex; align-items: center; gap: 10px; padding: 16px; }
+.log-user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-pink); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: bold; }
+.log-user-name { font-size: 0.95rem; font-weight: 500; }
+#log-output-player { width: 100%; height: 220px; background: #000; object-fit: cover; display: block; }
+.subtitle-action-box { display: flex; justify-content: center; padding: 20px 16px; background: #111112; }
+.edit-sub-btn { background: rgba(255, 255, 255, 0.08); border: none; border-radius: 20px; padding: 10px 24px; color: #fff; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+.edit-sub-btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+/* 🌟 完美復刻：橫向專業相機拍攝全螢幕遮罩層 🌟 */
+#overlay-landscape-camera {
     background: #000000;
+    padding: 0;
+    display: none;
+    flex-direction: row; /* 橫向排版佈局 */
 }
-.log-view-top-bar {
+.camera-inner-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 4px solid var(--accent-pink);
+    border-radius: 40px;
+    box-sizing: border-box;
+    display: flex;
+    overflow: hidden;
+}
+/* 用於背後渲染實體鏡頭畫面 */
+#landscape-video-render {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    background: #111;
+}
+/* 遮罩控制圖層 */
+.camera-ui-layer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    padding: 20px 30px;
+    box-sizing: border-box;
 }
-.log-view-nav-left {
+/* 左側控制欄 */
+.cam-left-panel {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    font-size: 1.1rem;
-    font-weight: bold;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
-.log-view-icons-right {
-    display: flex;
-    gap: 12px;
-}
-.log-view-icon-btn {
-    background: transparent;
+.cam-btn {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: none;
     color: #fff;
-    font-size: 1.3rem;
-    cursor: pointer;
-    padding: 4px;
-}
-/* 影片手記主展示卡片 */
-.log-video-card {
-    width: 100%;
-    background: #111112;
-    border-radius: 24px;
-    overflow: hidden;
-    position: relative;
-    margin-top: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.03);
-}
-.log-user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px;
-}
-.log-user-avatar {
-    width: 32px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
-    background: var(--accent-pink);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+/* 中央視覺倒數與縮放欄 */
+.cam-center-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.cam-countdown-text {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    margin-bottom: 15px;
+}
+.cam-zoom-selectors {
+    display: flex;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 4px 14px;
+    border-radius: 20px;
+    gap: 20px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.zoom-opt {
+    cursor: pointer;
+    color: rgba(255,255,255,0.6);
+    transition: color 0.2s;
+}
+.zoom-opt.active {
+    color: #FFD43F; /* 亮黃色高亮 */
     font-weight: bold;
 }
-.log-user-name {
-    font-size: 0.95rem;
-    font-weight: 500;
-}
-/* 手記內置播放器 */
-#log-output-player {
-    width: 100%;
-    height: 220px;
-    background: #000;
-    object-fit: cover;
-    display: block;
-}
-/* 編輯字幕按鈕區域 */
-.subtitle-action-box {
+/* 右側按鈕操作欄 */
+.cam-right-panel {
     display: flex;
-    justify-content: center;
-    padding: 20px 16px;
-    background: #111112;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 100%;
 }
-.edit-sub-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: none;
-    border-radius: 20px;
-    padding: 10px 24px;
-    color: #fff;
-    font-size: 0.95rem;
-    cursor: pointer;
+/* 藍色雙外圈笑臉快門按鈕 */
+.cam-shutter-outer {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    border: 3px solid #00C8FF; /* 藍色外圈 */
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: background 0.2s;
+    justify-content: center;
+    cursor: pointer;
+    background: transparent;
+    transition: transform 0.2s;
 }
-.edit-sub-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
+.cam-shutter-outer:active { transform: scale(0.92); }
+.cam-shutter-inner {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #00C8FF; /* 藍色內圈 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    color: #000;
+    user-select: none;
 }
 
-/* 名字編輯燈箱 */
+/* 名字編輯、照片預覽燈箱 */
 .lohas-modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 200; display: flex; justify-content: center; align-items: center; border-radius: 40px; display: none; }
 .lohas-modal { background: #222226; width: 85%; border-radius: 28px; padding: 22px; text-align: left; }
 .modal-title { font-size: 1.15rem; font-weight: bold; margin-bottom: 4px; }
@@ -466,7 +520,6 @@ button {
 .modal-btn.cancel { background: #2C2C30; color: #fff; }
 .modal-btn.save { background: var(--accent-pink); color: #fff; }
 
-/* 照片擷取燈箱 */
 .photo-preview-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 250; border-radius: 40px; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
 #captured-image-view { max-width: 100%; max-height: 65%; border-radius: 22px; border: 3px solid #fff; object-fit: contain; }
 
@@ -593,23 +646,50 @@ button {
                 <span id="log-view-title-mode">vlog ❯</span>
             </div>
             <div class="log-view-icons-right">
-                <button class="log-view-icon-btn" onclick="alert('功能：分享手記日誌')">📤</button>
-                <button class="log-view-icon-btn" onclick="alert('功能：開啟對話訊息視窗')">💬</button>
+                <button class="log-view-icon-btn" onclick="alert('分享手記')">📤</button>
+                <button class="log-view-icon-btn" onclick="alert('手記對話面板')">💬</button>
             </div>
         </div>
-
         <div class="log-video-card">
             <div class="log-user-info">
                 <div class="log-user-avatar" id="log-user-avatar-tag">ア</div>
                 <div class="log-user-name" id="log-user-name-tag">A</div>
             </div>
-            
             <video id="log-output-player" controls></video>
-            
             <div class="subtitle-action-box">
                 <button class="edit-sub-btn" onclick="App.handleEditSubtitle()">
                     <span>字📝</span> 編輯字幕
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="lohas-full-overlay" id="overlay-landscape-camera">
+        <div class="camera-inner-container">
+            <video id="landscape-video-render" autoplay playsinline muted></video>
+            
+            <div class="camera-ui-layer">
+                <div class="cam-left-panel">
+                    <button class="cam-btn" onclick="alert('閃光燈設定已切換')">⚡</button>
+                    <button class="cam-btn" onclick="alert('定時/延時攝影模式已激活')">⏱️</button>
+                </div>
+                
+                <div class="cam-center-panel">
+                    <div class="cam-countdown-text" id="cam-live-countdown">14:00</div>
+                    <div class="cam-zoom-selectors">
+                        <span class="zoom-opt" onclick="App.setZoom(this, '.5')">.5</span>
+                        <span class="zoom-opt active" onclick="App.setZoom(this, '1')">1</span>
+                        <span class="zoom-opt" onclick="App.setZoom(this, '2')">2</span>
+                    </div>
+                </div>
+                
+                <div class="cam-right-panel">
+                    <button class="cam-btn" onclick="App.closeFullOverlay('overlay-landscape-camera')" style="background:rgba(255,255,255,0.15);">✕</button>
+                    <div class="cam-shutter-outer" onclick="App.executeShutterAction()">
+                        <div class="cam-shutter-inner" id="cam-shutter-icon">😊</div>
+                    </div>
+                    <button class="cam-btn" onclick="alert('相機前後鏡頭翻轉中...')">🔄</button>
+                </div>
             </div>
         </div>
     </div>
@@ -627,7 +707,6 @@ button {
             <span class="status-dot" id="lohas-status-dot"></span>
             <span id="lohas-tag-text">📷 鏡頭就緒 (轉橫向更生鬼)</span>
         </div>
-        
         <video id="vlg-video-player" autoplay playsinline muted></video>
 
         <div class="camera-mode-selectors">
@@ -680,7 +759,7 @@ const themes = [
     { bg:'#FFD1FF', icon:'🦄', msg:'夢幻一下', filter:'brightness(1.2)' },
     { bg:'#FFF3B0', icon:'🌞', msg:'陽光正好', filter:'saturate(1.4)' },
     { bg:'#C1FBA4', icon:'🌿', msg:'呼吸自然', filter:'hue-rotate(20deg)' },
-    { bg:'#FEC8D8', icon:'🐰', msg:'溫源一天', filter:'contrast(1.1)' },
+    { bg:'#FEC8D8', icon:'🐰', msg:'溫柔一天', filter:'contrast(1.1)' },
     { bg:'#B5EAD7', icon:'🐳', msg:'像海一樣靜', filter:'blur(1px)' },
     { bg:'#C7CEEA', icon:'🌙', msg:'夜晚也美', filter:'brightness(0.8)' },
     { bg:'#FFDAC1', icon:'☕', msg:'屬於你的時光', filter:'sepia(0.5)' },
@@ -711,6 +790,7 @@ const App = {
     isRecording: false,
     tempPhotoBlob: null,
     recordTimeout: null,
+    landscapeCountdownInterval: null,
 
     async init(){
         try {
@@ -754,6 +834,169 @@ const App = {
         } else {
             this.trigger();
         }
+    },
+
+    // 🌟 點擊底部的白色「記錄閃光」大按鈕時啟動橫向專業鏡頭設置面板 🌟
+    trigger(){
+        if(this.count >= 3){
+            alert("已滿 3 個片段");
+            return;
+        }
+        
+        // 1. 同步加載並串聯當前鏡頭流到橫向播放層
+        const landVideo = document.getElementById('landscape-video-render');
+        if(this.stream) {
+            landVideo.srcObject = this.stream;
+        }
+        
+        // 2. 初始化重置專業倒數計時與快門圖標
+        clearInterval(this.landscapeCountdownInterval);
+        if(this.cameraMode === 'photo') {
+            document.getElementById('cam-live-countdown').innerText = "00:03";
+            document.getElementById('cam-shutter-icon').innerText = "📸";
+        } else {
+            document.getElementById('cam-live-countdown').innerText = "14:00";
+            document.getElementById('cam-shutter-icon').innerText = "😊";
+        }
+
+        // 3. 彈出專業橫向拍照設置面板
+        document.getElementById('overlay-landscape-camera').style.display = 'flex';
+    },
+
+    // 🔘 點擊笑臉雙圈快門按鈕執行拍照或錄影功能
+    executeShutterAction() {
+        // 同步更替樂活趣味隨機主題與公仔
+        const t = themes[Math.floor(Math.random()*themes.length)];
+        document.body.style.background = t.bg;
+        currentIcon = t.icon; 
+        document.getElementById("mascot-display").innerText = currentIcon;
+        document.getElementById("mascot-right-btn").innerText = currentIcon;
+        document.getElementById("vlg-status-text").innerText = t.msg;
+        document.getElementById("vlg-video-player").style.filter = t.filter;
+        document.getElementById("ai-text").innerText = generateAIText(t);
+
+        // 關閉橫向鏡頭面板，返回主視窗以彈出對應的捕獲燈箱反饋
+        this.closeFullOverlay('overlay-landscape-camera');
+
+        if(this.cameraMode === 'photo') {
+            this.executePhotoCapture();
+        } else {
+            this.executeVideoRecording();
+        }
+    },
+
+    // 倍率縮放選擇
+    setZoom(element, scale) {
+        const opts = element.parentNode.querySelectorAll('.zoom-opt');
+        opts.forEach(o => o.classList.remove('active'));
+        element.classList.add('active');
+        console.log("當前鏡頭焦距縮放倍率已設為：" + scale);
+    },
+
+    executePhotoCapture() {
+        const video = document.getElementById('vlg-video-player');
+        const canvas = document.getElementById('photo-capture-canvas');
+        const ctx = canvas.getContext('2d');
+        try {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                this.tempPhotoBlob = blob;
+                const url = URL.createObjectURL(blob);
+                document.getElementById('captured-image-view').src = url;
+                document.getElementById('photo-preview-box').style.display = 'flex';
+            }, 'image/jpeg');
+        } catch(e) {
+            alert("✨ 模擬拍照成功！已捕獲橫向樂活碎片照片。");
+            this.count++;
+            document.getElementById("vlg-count").innerText = this.count;
+            this.checkProgress();
+        }
+    },
+    closePhotoPreview() { document.getElementById('photo-preview-box').style.display = 'none'; },
+    savePhotoToClips() {
+        if(this.tempPhotoBlob) this.clips.push(this.tempPhotoBlob);
+        this.count++;
+        document.getElementById("vlg-count").innerText = this.count;
+        this.closePhotoPreview();
+        this.checkProgress();
+    },
+
+    executeVideoRecording() {
+        if(!this.isRecording) {
+            this.isRecording = true;
+            this.chunks = [];
+            document.getElementById('vlg-start-btn').innerText = "停止錄影";
+            document.getElementById('vlg-start-btn').style.background = "#FF3B30";
+            document.getElementById('vlg-start-btn').style.color = "#fff";
+            document.getElementById('lohas-status-dot').classList.add('recording');
+            document.getElementById('lohas-tag-text').innerText = "🔴 正在錄製影片中...";
+
+            if(this.stream) {
+                this.recorder = new MediaRecorder(this.stream);
+                this.recorder.ondataavailable = e => this.chunks.push(e.data);
+                this.recorder.onstop = ()=>{
+                    const blob = new Blob(this.chunks, {type: "video/webm"});
+                    this.clips.push(blob);
+                    this.count++;
+                    document.getElementById("vlg-count").innerText = this.count;
+                    this.checkProgress();
+                };
+                this.recorder.start();
+                this.recordTimeout = setTimeout(() => { if(this.isRecording) this.executeVideoRecording(); }, 3000);
+            } else {
+                this.recordTimeout = setTimeout(() => { if(this.isRecording) this.executeVideoRecording(); }, 3000);
+            }
+        } else {
+            this.isRecording = false;
+            clearTimeout(this.recordTimeout);
+            document.getElementById('vlg-start-btn').innerText = "開始錄影";
+            document.getElementById('vlg-start-btn').style.background = "#2D2D2D";
+            document.getElementById('vlg-start-btn').style.color = "#fff";
+            document.getElementById('lohas-status-dot').classList.remove('recording');
+            document.getElementById('lohas-tag-text').innerText = "📹 鏡頭就緒 (錄製影片模式)";
+            
+            if(this.recorder && this.recorder.state !== "inactive") {
+                this.recorder.stop();
+            } else if(!this.stream) {
+                this.count++;
+                document.getElementById("vlg-count").innerText = this.count;
+                this.checkProgress();
+            }
+        }
+    },
+
+    checkProgress() {
+        if(this.count < 3) {
+            document.getElementById('lohas-bell-badge').style.display = 'block';
+            document.getElementById('noti-content').innerHTML = `溫馨小幫手：今天還差 ${3 - this.count} 個片段就能生成日記囉！`;
+        }
+    },
+
+    handleEditSubtitle() {
+        alert("✨ [言語治療/認知訓練模組]\\n正在調用 Web Speech API 進行語音校正辨識與手記字幕編輯...");
+    },
+
+    generate(){
+        if(this.count<3){
+            alert("請先收集3段");
+            return;
+        }
+        const final = new Blob(this.clips,{type:"video/webm"});
+        const url = URL.createObjectURL(final);
+        
+        const v = document.getElementById("vlg-video-player");
+        v.srcObject = null;
+        v.src = url;
+        v.controls = true;
+        document.getElementById("vlg-status-text").innerText="🎬 完成!";
+        
+        const logPlayer = document.getElementById("log-output-player");
+        logPlayer.src = url;
+        
+        document.getElementById("overlay-view-log").style.display = "flex";
+        
+        document.getElementById('lohas-bell-badge').style.display = 'block';
+        document.getElementById('noti-content').innerHTML = `🎉 成功解鎖！今天的每日手記已生成，已自動分享同步給你的死黨！`;
     },
 
     initNavigationMenus() {
@@ -823,7 +1066,6 @@ const App = {
     closeFullOverlay(id) { 
         document.getElementById(id).style.display = 'none'; 
         if(id === 'overlay-view-log') {
-            // 關閉手記詳情時，暫停獨立播放器
             document.getElementById('log-output-player').pause();
         }
     },
@@ -846,152 +1088,6 @@ const App = {
             document.getElementById('lohas-bell-badge').style.display = 'block';
             document.getElementById('noti-content').innerHTML = `✨ <b>阿明</b> 剛剛回應了您的每日手記，快連線看看！<br><small style="color:#666;">1分鐘前</small>`;
         }, 3000);
-    },
-
-    trigger(){
-        if(this.count>=3){
-            alert("已滿 3 個片段");
-            return;
-        }
-        const t = themes[Math.floor(Math.random()*themes.length)];
-        document.body.style.background = t.bg;
-        currentIcon = t.icon; 
-        const mascotLeft = document.getElementById("mascot-display");
-        const mascotRight = document.getElementById("mascot-right-btn");
-        
-        mascotLeft.innerText = currentIcon;
-        mascotRight.innerText = currentIcon;
-        
-        mascotLeft.classList.add("fade");
-        mascotRight.classList.add("fade");
-        setTimeout(() => {
-            mascotLeft.classList.remove("fade");
-            mascotRight.classList.remove("fade");
-        }, 600);
-
-        document.getElementById("vlg-status-text").innerText = t.msg;
-        const video = document.getElementById("vlg-video-player");
-        video.style.filter = t.filter;
-        document.getElementById("ai-text").innerText = generateAIText(t);
-
-        if(this.cameraMode === 'photo') {
-            this.executePhotoCapture();
-        } else {
-            this.executeVideoRecording();
-        }
-    },
-
-    executePhotoCapture() {
-        const video = document.getElementById('vlg-video-player');
-        const canvas = document.getElementById('photo-capture-canvas');
-        const ctx = canvas.getContext('2d');
-        
-        try {
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            canvas.toBlob((blob) => {
-                this.tempPhotoBlob = blob;
-                const url = URL.createObjectURL(blob);
-                document.getElementById('captured-image-view').src = url;
-                document.getElementById('photo-preview-box').style.display = 'flex';
-            }, 'image/jpeg');
-        } catch(e) {
-            alert("✨ 模擬拍照成功！已成功捕獲當前樂活碎片照片。");
-            this.count++;
-            document.getElementById("vlg-count").innerText = this.count;
-            this.checkProgress();
-        }
-    },
-    closePhotoPreview() {
-        document.getElementById('photo-preview-box').style.display = 'none';
-    },
-    savePhotoToClips() {
-        if(this.tempPhotoBlob) this.clips.push(this.tempPhotoBlob);
-        this.count++;
-        document.getElementById("vlg-count").innerText = this.count;
-        this.closePhotoPreview();
-        this.checkProgress();
-    },
-
-    executeVideoRecording() {
-        if(!this.isRecording) {
-            this.isRecording = true;
-            this.chunks = [];
-            document.getElementById('vlg-start-btn').innerText = "停止錄影";
-            document.getElementById('vlg-start-btn').style.background = "#FF3B30";
-            document.getElementById('vlg-start-btn').style.color = "#fff";
-            document.getElementById('lohas-status-dot').classList.add('recording');
-            document.getElementById('lohas-tag-text').innerText = "🔴 正在錄製影片中...";
-
-            if(this.stream) {
-                this.recorder = new MediaRecorder(this.stream);
-                this.recorder.ondataavailable = e => this.chunks.push(e.data);
-                this.recorder.onstop = ()=>{
-                    const blob = new Blob(this.chunks, {type: "video/webm"});
-                    this.clips.push(blob);
-                    this.count++;
-                    document.getElementById("vlg-count").innerText = this.count;
-                    this.checkProgress();
-                };
-                this.recorder.start();
-                this.recordTimeout = setTimeout(() => { if(this.isRecording) this.executeVideoRecording(); }, 3000);
-            } else {
-                this.recordTimeout = setTimeout(() => { if(this.isRecording) this.executeVideoRecording(); }, 3000);
-            }
-        } else {
-            this.isRecording = false;
-            clearTimeout(this.recordTimeout);
-            document.getElementById('vlg-start-btn').innerText = "開始錄影";
-            document.getElementById('vlg-start-btn').style.background = "#2D2D2D";
-            document.getElementById('vlg-start-btn').style.color = "#fff";
-            document.getElementById('lohas-status-dot').classList.remove('recording');
-            document.getElementById('lohas-tag-text').innerText = "📹 鏡頭就緒 (錄製影片模式)";
-            
-            if(this.recorder && this.recorder.state !== "inactive") {
-                this.recorder.stop();
-            } else if(!this.stream) {
-                this.count++;
-                document.getElementById("vlg-count").innerText = this.count;
-                this.checkProgress();
-            }
-        }
-    },
-
-    checkProgress() {
-        if(this.count < 3) {
-            document.getElementById('lohas-bell-badge').style.display = 'block';
-            document.getElementById('noti-content').innerHTML = `溫馨小幫手：今天還差 ${3 - this.count} 個片段就能生成日記囉！`;
-        }
-    },
-
-    // 🌟 編輯字幕互動邏輯
-    handleEditSubtitle() {
-        const currentSub = alert("✨ [言語治療/認知訓練模組]\n正在調用 Web Speech API 進行語音校正辨識與手記字幕編輯...");
-    },
-
-    generate(){
-        if(this.count<3){
-            alert("請先收集3段");
-            return;
-        }
-        const final = new Blob(this.clips,{type:"video/webm"});
-        const url = URL.createObjectURL(final);
-        
-        // 1. 同步更新主要預覽影片
-        const v = document.getElementById("vlg-video-player");
-        v.srcObject = null;
-        v.src = url;
-        v.controls = true;
-        document.getElementById("vlg-status-text").innerText="🎬 完成!";
-        
-        // 2. 🌟 完美同步將影片、頭像與名稱載入全新的手記獨立區域播放器中 🌟
-        const logPlayer = document.getElementById("log-output-player");
-        logPlayer.src = url;
-        
-        // 3. 彈出全螢幕手記詳細內容與編輯字幕區域
-        document.getElementById("overlay-view-log").style.display = "flex";
-        
-        document.getElementById('lohas-bell-badge').style.display = 'block';
-        document.getElementById('noti-content').innerHTML = `🎉 成功解鎖！今天的每日手記已生成，已自動分享同步給你的死黨！`;
     }
 };
 
