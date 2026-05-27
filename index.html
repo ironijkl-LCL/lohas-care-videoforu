@@ -10,7 +10,7 @@
     --accent-pink: #FF64C8; 
     --panel-bg: #1E1E1E;
     --sub-panel-bg: #252529;
-    --card-bg: #111112; /* 截圖中的深色卡片背景 */
+    --card-bg: #111112;
     --star-yellow: #FFEB3B;
 }
 
@@ -24,18 +24,22 @@ body {
     align-items: center;
     min-height: 100vh;
     color: #fff;
+    padding: 20px 0;
+    box-sizing: border-box;
 }
 
 /* 核心主容器 (100% 保留結構) */
 #vlg-standalone-root { 
-    width: 90%;
-    max-width: 400px;
+    width: 92%;
+    max-width: 410px;
     background: var(--panel-bg);
     border-radius: 40px;
     padding: 25px;
     text-align: center;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    box-sizing: border-box;
     position: relative;
     overflow: hidden;
 }
@@ -71,76 +75,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* 🌟 新增：vlog 資訊卡片樣式 */
-.vlog-info-card {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 18px;
-    text-align: left;
+    padding: 0;
     position: relative;
-    margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: background 0.3s;
 }
-.vlog-card-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 6px;
-    display: block;
-}
-.vlog-card-desc {
-    font-size: 0.85rem;
-    color: #8E8E93;
-    line-height: 1.4;
-    max-width: 80%;
-}
-/* 右側特色黃色星星氣泡圖標 */
-.star-bubble-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: var(--star-yellow);
-    color: #000;
-    padding: 8px 12px;
-    border-radius: 12px;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 10px rgba(255, 235, 59, 0.3);
-}
-
-/* 🌟 新增：Share with eat 互動工具列樣式 */
-.share-eat-toolbar {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 12px 18px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.03);
-}
-.share-text {
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-.share-tools-group {
-    display: flex;
-    gap: 12px;
-}
-.tool-btn {
-    background: #1C1C1E;
-    border: none;
-    color: #8E8E93;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 1rem;
-}
+.nav-btn:hover { background: #3D3D3D; }
 
 /* 🔔 提醒小黃點 */
 .noti-badge {
@@ -151,6 +90,7 @@ body {
     height: 8px;
     background: #FFD43F;
     border-radius: 50%;
+    box-shadow: 0 0 8px #FFD43F;
     display: none;
 }
 
@@ -162,32 +102,66 @@ body {
     background: rgba(255,255,255,0.04);
     padding: 12px 18px;
     border-radius: 20px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-align: left;
 }
 .mascot-left-group { display: flex; align-items: center; }
-#mascot-display { font-size: 2.2rem; animation: bounce 1s infinite alternate; margin-right: 15px; cursor: pointer; }
-#mascot-right-btn { font-size: 2.2rem; animation: bounce 1s infinite alternate-reverse; cursor: pointer; padding-left: 10px; }
-#vlg-status-text { font-size: 1rem; font-weight: bold; color: #fff; }
+#mascot-display { font-size: 2.2rem; animation: bounce 1s infinite alternate; margin-right: 15px; cursor: pointer; user-select: none; }
+#mascot-right-btn { font-size: 2.2rem; animation: bounce 1s infinite alternate-reverse; cursor: pointer; user-select: none; padding-left: 10px; }
+#vlg-status-text { font-size: 1.1rem; font-weight: bold; color: #fff; }
 
 @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-6px); } }
 
-/* 🎬 相機預覽區域 */
-.camera-preview-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
-.camera-status-tag { position: absolute; top: 15px; left: 15px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(6px); padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; color: #fff; z-index: 10; pointer-events: none; display: flex; align-items: center; gap: 6px; }
-.status-dot { width: 6px; height: 6px; background: #FF3B30; border-radius: 50%; display: inline-block; }
+/* 🎬 核心相機/預覽區域包裹器 */
+.camera-preview-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* 🏷️ 狀態標籤 */
+.camera-status-tag {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #fff;
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: #FF3B30;
+    border-radius: 50%;
+    display: inline-block;
+}
+.status-dot.recording { animation: blink 0.8s infinite alternate; }
+@keyframes blink { from { opacity: 1; box-shadow: 0 0 6px #FF3B30; } to { opacity: 0; } }
 
 #vlg-video-player {
     width: 100%;
-    height: 240px;
+    height: 50vw;
+    max-height: 240px;
     border-radius: 30px;
     object-fit: cover;
     border: 4px solid var(--accent-pink);
     box-shadow: 0 0 20px rgba(255, 100, 200, 0.25);
+    transition: filter 0.5s ease;
     background: #000;
+    display: block;
+    box-sizing: border-box;
 }
 
-/* 切換模式選單融入預覽區底部 */
 .camera-mode-selectors {
     position: absolute;
     bottom: 15px;
@@ -197,34 +171,170 @@ body {
     justify-content: center;
     gap: 12px;
     font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    z-index: 10;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     padding: 4px 6px;
     border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     width: max-content;
 }
-.mode-opt { cursor: pointer; padding: 4px 14px; border-radius: 12px; transition: all 0.2s; color: rgba(255,255,255,0.6); }
-.mode-opt.active { color: #fff; background: var(--accent-pink); font-weight: bold; }
+.mode-opt { cursor: pointer; padding: 4px 14px; border-radius: 12px; transition: all 0.2s ease; }
+.mode-opt.active { color: #fff; background: var(--accent-pink); font-weight: bold; box-shadow: 0 2px 8px rgba(255, 100, 200, 0.4); }
 
-#ai-text { margin: 15px 0; font-size: 0.9rem; color: #B3B3B3; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 20px; border-left: 4px solid var(--accent-pink); text-align: left; }
+#ai-text { margin: 15px 0; font-size: 0.95rem; color: #B3B3B3; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 20px; border-left: 4px solid var(--accent-pink); text-align: left; line-height: 1.4; }
 
 .counter-box { margin-top: 15px; font-size: 0.85rem; color: #888; }
 #vlg-count { font-weight: bold; color: #fff; }
 
-.vlg-controls { display: flex; gap: 12px; margin-top: 20px; }
-button { flex: 1; padding: 16px; border: none; border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.3s; }
-#vlg-start-btn { background: #fff; color: #000; }
-#vlg-generate-btn { background: #2D2D2D; color: #fff; }
-
-/* 其他附表、遮罩樣式 (維持不變) */
-.lohas-popover { position: absolute; background: rgba(32, 32, 38, 0.95); backdrop-filter: blur(14px); border-radius: 28px; padding: 6px; width: 210px; z-index: 100; display: none; text-align: left; }
-.lohas-full-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 150; border-radius: 40px; padding: 25px; display: none; flex-direction: column; text-align: left; }
-
-/* 📱 響應式網頁設計 */
-@media (max-width: 500px) {
-    body { padding: 0; background: var(--panel-bg); }
-    #vlg-standalone-root { width: 100%; max-width: 100%; min-height: 100vh; border-radius: 0; border: none; }
+/* 🔘 按鈕控制組 */
+.vlg-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    position: relative;
 }
+button {
+    flex: 1;
+    padding: 16px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 5;
+}
+#vlg-start-btn { background: #fff; color: #000; }
+#vlg-start-btn:hover { background: #e6e6e6; }
+
+/* 🌟 「生成日記」按鈕本體與收納盒容器 🌟 */
+.generate-btn-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+#vlg-generate-btn {
+    background: #2D2D2D;
+    color: #fff;
+    width: 100%;
+}
+#vlg-generate-btn:hover { background: #3D3D3D; }
+
+/* 📥 抽屜式功能收納盒 (依附於生成日記按鈕，預設隱藏向下收縮) */
+.generate-drawer-box {
+    position: absolute;
+    bottom: 60px; /* 定位在生成日記按鈕的正上方 */
+    left: 0;
+    width: 100%;
+    background: #1a1a1f;
+    border: 1px solid rgba(255, 100, 200, 0.25);
+    border-radius: 24px;
+    padding: 16px;
+    box-sizing: border-box;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+}
+
+/* 當長按「生成日記」按鈕激活展開狀態時 */
+.generate-btn-wrapper.drawer-expanded .generate-drawer-box {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto; /* 展開後內部按鍵與卡片允許點擊 */
+}
+
+/* 1️⃣ 功能收納：vlog 資訊卡片樣式 */
+.vlog-info-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 14px;
+    text-align: left;
+    position: relative;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+}
+.vlog-card-title { font-size: 1rem; font-weight: bold; margin-bottom: 4px; display: block; color: var(--accent-pink); }
+.vlog-card-desc { font-size: 0.8rem; color: #8E8E93; line-height: 1.4; max-width: 80%; }
+.star-bubble-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: var(--star-yellow); color: #000; padding: 6px 10px; border-radius: 10px; font-size: 1rem; }
+
+/* 2️⃣ 功能收納：Share with eat 互動工具列樣式 */
+.share-eat-toolbar {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+.share-text { font-size: 0.95rem; font-weight: 500; }
+.share-tools-group { display: flex; gap: 8px; }
+.tool-btn { background: #1C1C1E; border: none; color: #8E8E93; width: 34px; height: 34px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 0.9rem; }
+
+
+/* 專業橫向相機遮罩層快門組 */
+.shutter-interactive-group { position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+.shutter-sub-btn { position: absolute; width: 38px; height: 38px; border-radius: 50%; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; opacity: 0; transform: scale(0.5); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease; pointer-events: none; }
+.shutter-sub-btn.flash-on { background: var(--star-yellow); color: #000; box-shadow: 0 0 8px var(--star-yellow); }
+.shutter-interactive-group.expanded .shutter-sub-btn { opacity: 1; transform: scale(1); pointer-events: auto; }
+.shutter-interactive-group.expanded #cam-flash-toggle { top: -45px; left: -30px; }
+.shutter-interactive-group.expanded #cam-timer-toggle { bottom: -45px; left: -30px; }
+.shutter-interactive-group.expanded #cam-facing-toggle { left: -65px; top: 21px; }
+
+.cam-shutter-outer { width: 76px; height: 76px; border-radius: 50%; border: 3px solid #00C8FF; display: flex; align-items: center; justify-content: center; cursor: pointer; background: rgba(0,0,0,0.2); z-index: 10; transition: transform 0.2s; }
+.cam-shutter-outer:active { transform: scale(0.92); }
+.cam-shutter-inner { width: 60px; height: 60px; border-radius: 50%; background: #00C8FF; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #000; user-select: none; font-weight: bold; }
+
+/* 其餘遮罩層樣式與 RWD */
+.lohas-popover { position: absolute; background: rgba(32, 32, 38, 0.95); backdrop-filter: blur(14px); border-radius: 28px; padding: 6px; width: 210px; z-index: 100; display: none; text-align: left; }
+.lohas-full-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #000000; z-index: 150; border-radius: 40px; padding: 25px; box-sizing: border-box; text-align: left; display: none; flex-direction: column; }
+#overlay-view-log { background: #000000; }
+.log-view-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.log-view-nav-left { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; font-weight: bold; }
+.log-view-icons-right { display: flex; gap: 12px; }
+.log-view-icon-btn { background: transparent; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 4px; }
+.log-video-card { width: 100%; background: #111112; border-radius: 24px; overflow: hidden; position: relative; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.03); }
+.log-user-info { display: flex; align-items: center; gap: 10px; padding: 16px; }
+.log-user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-pink); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: bold; }
+.log-user-name { font-size: 0.95rem; font-weight: 500; }
+#log-output-player { width: 100%; height: 220px; background: #000; object-fit: cover; display: block; }
+.subtitle-action-box { display: flex; justify-content: center; padding: 20px 16px; background: #111112; }
+.edit-sub-btn { background: rgba(255, 255, 255, 0.08); border: none; border-radius: 20px; padding: 10px 24px; color: #fff; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+
+#overlay-landscape-camera { background: #000000; padding: 0; display: none; flex-direction: row; }
+.camera-inner-container { position: relative; width: 100%; height: 100%; border: 4px solid var(--accent-pink); border-radius: 40px; box-sizing: border-box; display: flex; overflow: hidden; }
+#landscape-video-render { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; background: #111; }
+#flash-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 2; opacity: 0; pointer-events: none; transition: opacity 0.1s ease; }
+.camera-ui-layer { position: relative; width: 100%; height: 100%; z-index: 5; display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; box-sizing: border-box; }
+.cam-center-panel { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; flex: 1; }
+.cam-countdown-text { font-size: 3.5rem; font-weight: 800; color: #ffffff; letter-spacing: 2px; text-shadow: 0 4px 15px rgba(0,0,0,0.6); margin-bottom: 15px; }
+.cam-right-panel { display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 100%; width: 100px; }
+.cam-close-wrapper { width: 100%; display: flex; justify-content: flex-end; }
+
+.lohas-modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 200; display: flex; justify-content: center; align-items: center; border-radius: 40px; display: none; }
+.lohas-modal { background: #222226; width: 85%; border-radius: 28px; padding: 22px; text-align: left; }
+.modal-title { font-size: 1.15rem; font-weight: bold; margin-bottom: 4px; }
+.modal-subtitle { font-size: 0.85rem; color: #8E8E93; margin-bottom: 16px; }
+.modal-input-box { background: #2C2C30; border-radius: 14px; padding: 12px; margin-bottom: 20px; }
+.modal-input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1rem; outline: none; }
+.modal-btns { display: flex; gap: 12px; }
+.modal-btn { flex: 1; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; border: none; cursor: pointer; text-align: center; }
+.modal-btn.cancel { background: #2C2C30; color: #fff; }
+.modal-btn.save { background: var(--accent-pink); color: #fff; }
+
+.photo-preview-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 250; border-radius: 40px; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+#captured-image-view { max-width: 100%; max-height: 65%; border-radius: 22px; border: 3px solid #fff; object-fit: contain; }
+
+body { padding: 20px 0; box-sizing: border-box; }
+@media (max-width: 500px) { body { padding: 0; background: var(--panel-bg); } #vlg-standalone-root { width: 100%; max-width: 100%; min-height: 100vh; border-radius: 0; border: none; } }
 </style>
 </head>
 
@@ -232,112 +342,618 @@ button { flex: 1; padding: 16px; border: none; border-radius: 25px; font-weight:
 
 <main id="vlg-standalone-root">
     <div class="lohas-top-bar">
-        <div class="lohas-logo">SETLOG</div>
+        <div class="lohas-logo">LohasVLG</div>
         <div class="lohas-nav-icons">
-            <button class="nav-btn" id="lohas-plus-btn">+</button>
-            <button class="nav-btn" id="lohas-bell-btn">🔔<span class="noti-badge" id="lohas-bell-badge"></span></button>
-            <button class="nav-btn" id="lohas-more-btn">•••</button>
+            <button class="nav-btn" id="lohas-plus-btn" title="快捷功能">+</button>
+            <button class="nav-btn" id="lohas-bell-btn" title="通知中心">
+                🔔<span class="noti-badge" id="lohas-bell-badge"></span>
+            </button>
+            <button class="nav-btn" id="lohas-more-btn" title="更多設定">•••</button>
+            
+            <div class="lohas-popover" id="popover-plus" style="right: 90px; top: 45px; width: 160px;">
+                <div class="popover-item" id="item-create-log"><div class="left-sec">📝 建立手記</div></div>
+                <div class="popover-item" id="item-join-log"><div class="left-sec">👥 加入手記</div></div>
+            </div>
+
+            <div class="lohas-popover" id="popover-bell" style="right: 45px; top: 45px; width: 240px;">
+                <div class="popover-header">最新動態提醒</div>
+                <div class="popover-item" style="font-size:0.85rem; line-height:1.3;" id="noti-content">暫無新通知</div>
+            </div>
+
+            <div class="lohas-popover" id="popover-main-menu" style="right: 0px; top: 45px; width: 210px;">
+                <div class="popover-header">
+                    <div class="avatar">アン</div>&nbsp;&nbsp;<span id="display-user-name">A</span>
+                </div>
+                <div class="popover-item" id="item-edit-profile"><div class="left-sec">👤 編輯個人檔案</div><div class="arrow">❯</div></div>
+                <div class="popover-item" id="item-noti-settings"><div class="left-sec">🔔 日誌通知設定</div><div class="arrow">❯</div></div>
+                <div class="popover-item" id="item-account-settings"><div class="left-sec">⚙️ 帳號與安全</div><div class="arrow">❯</div></div>
+                <div class="popover-item" onclick="alert('導向：意見回饋')"><div class="left-sec">💬 意見回饋</div><div></div></div>
+                <div class="popover-item" onclick="alert('導向：樂活指南')"><div class="left-sec">❓ 樂活指南</div><div></div></div>
+            </div>
+
+            <div class="lohas-popover" id="popover-sub-profile" style="right: 0px; top: 45px; width: 210px; background: var(--sub-panel-bg);">
+                <div class="popover-item" style="color: #8E8E93; font-weight: bold;" id="back-to-main-1"><div class="left-sec">❮ 編輯個人檔案</div></div>
+                <div class="popover-item" id="sub-item-change-name"><div class="left-sec">顯示名稱</div></div>
+                <div class="popover-item" onclick="alert('功能：更換照片')"><div class="left-sec">更換照片</div></div>
+                <div class="popover-item" id="sub-item-change-color"><div class="left-sec">顏色</div><div class="arrow">❯</div></div>
+            </div>
+
+            <div class="lohas-popover" id="popover-sub-colors" style="right: 0px; top: 45px; width: 210px; background: #2C2C35;">
+                <div class="popover-item" style="color: #8E8E93; font-weight: bold;" id="back-to-profile"><div class="left-sec">❮ 顏色</div></div>
+                <div class="popover-item color-opt" data-color="#00C8FF"><div class="left-sec"><span class="color-dot" style="background:#00C8FF;"></span>&nbsp;&nbsp;藍色</div><span class="check-mark">✓</span></div>
+                <div class="popover-item color-opt" data-color="#FF9500"><div class="left-sec"><span class="color-dot" style="background:#FF9500;"></span>&nbsp;&nbsp;橘色</div><span class="check-mark">✓</span></div>
+                <div class="popover-item color-opt" data-color="#AF52DE"><div class="left-sec"><span class="color-dot" style="background:#AF52DE;"></span>&nbsp;&nbsp;紫色</div><span class="check-mark">✓</span></div>
+                <div class="popover-item color-opt" data-color="#34C759"><div class="left-sec"><span class="color-dot" style="background:#34C759;"></span>&nbsp;&nbsp;綠色</div><span class="check-mark">✓</span></div>
+                <div class="popover-item color-opt" data-color="#5AC8FA"><div class="left-sec"><span class="color-dot" style="background:#5AC8FA;"></span>&nbsp;&nbsp;海</div><span class="check-mark">✓</span></div>
+                <div class="popover-item color-opt selected" data-color="#FF64C8"><div class="left-sec"><span class="color-dot" style="background:#FF64C8;"></span>&nbsp;&nbsp;粉紅色</div><span class="check-mark">✓</span></div>
+            </div>
+
+            <div class="lohas-popover" id="popover-sub-noti" style="right: 0px; top: 45px; width: 210px; background: var(--sub-panel-bg);">
+                <div class="popover-item" style="color: #8E8E93; font-weight: bold;" id="back-to-main-2"><div class="left-sec">❮ 日誌通知</div></div>
+                <div class="popover-item noti-opt" onclick="App.selectNoti(this, '每小時')"><div class="left-sec">每小時</div><span class="check-mark">✓</span></div>
+                <div class="popover-item noti-opt" onclick="App.selectNoti(this, '每 3 小時')"><div class="left-sec">每 3 小時</div><span class="check-mark">✓</span></div>
+                <div class="popover-item noti-opt selected" onclick="App.selectNoti(this, '關閉')"><div class="left-sec">關閉</div><span class="check-mark">✓</span></div>
+            </div>
+
+            <div class="lohas-popover" id="popover-sub-account" style="right: 0px; top: 45px; width: 210px; background: var(--sub-panel-bg);">
+                <div class="popover-item" style="color: #8E8E93; font-weight: bold;" id="back-to-main-3"><div class="left-sec">❮ 帳號</div></div>
+                <div class="popover-item" onclick="alert('登出')"><div class="left-sec">登出</div></div>
+                <div class="popover-item" onclick="alert('轉移到另一台裝置')"><div class="left-sec">轉移到另一台裝置</div></div>
+                <div class="popover-item" onclick="alert('新增備援電子郵件')"><div class="left-sec">新增備援電子郵件</div></div>
+                <div class="popover-item" onclick="alert('刪除帳號')"><div class="left-sec" style="color:#FF3B30;">刪除帳號</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lohas-full-overlay" id="overlay-create-log">
+        <div class="overlay-top">
+            <button class="overlay-close-btn" onclick="App.closeFullOverlay('overlay-create-log')">✕</button>
+            <button class="overlay-confirm-btn" onclick="alert('日誌建立成功！');App.closeFullOverlay('overlay-create-log')">✓</button>
+        </div>
+        <div class="overlay-title">➔ 建立日誌</div>
+        <div class="overlay-label">日誌名稱 (可選)</div>
+        <input type="text" class="overlay-input" placeholder="輸入日誌名稱">
+        <div class="overlay-label" style="margin-top: 10px;">日誌人數</div>
+        <div class="member-grid">
+            <div class="member-chip" onclick="App.selectMember(this)">2</div>
+            <div class="member-chip" onclick="App.selectMember(this)">3</div>
+            <div class="member-chip selected" onclick="App.selectMember(this)">4</div>
+            <div class="member-chip" onclick="App.selectMember(this)">5</div>
+            <div class="member-chip" onclick="App.selectMember(this)">6</div>
+            <div class="member-chip" onclick="App.selectMember(this)">7</div>
+            <div class="member-chip" onclick="App.selectMember(this)">8</div>
+            <div class="member-chip" onclick="App.selectMember(this)">9</div>
+            <div class="member-chip" onclick="App.selectMember(this)">10</div>
+            <div class="member-chip" onclick="App.selectMember(this)">11</div>
+            <div class="member-chip" onclick="App.selectMember(this)">12</div>
+        </div>
+    </div>
+
+    <div class="lohas-full-overlay" id="overlay-join-log" style="background: #1A1A1A;">
+        <div class="overlay-top" style="margin-bottom: 20px;">
+            <button class="overlay-close-btn" onclick="App.closeFullOverlay('overlay-join-log')">✕</button>
+            <div></div>
+        </div>
+        <div style="background: #000; padding: 25px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div style="font-size: 1.4rem; font-weight: bold; margin-bottom: 6px;">加入日誌</div>
+            <div style="font-size: 0.95rem; color: var(--accent-pink); margin-bottom: 25px;">去跟朋友拿日誌代碼</div>
+            <div class="code-input-container">
+                <span class="code-hash">#</span>
+                <input type="text" class="code-input-field" placeholder="abc123" id="input-log-code">
+                <button class="code-submit-btn" onclick="App.submitLogCode()">➔</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="lohas-full-overlay" id="overlay-view-log">
+        <div class="log-view-top-bar">
+            <div class="log-view-nav-left">
+                <button class="log-view-icon-btn" onclick="App.closeFullOverlay('overlay-view-log')" style="font-size:1.1rem;">❮</button>
+                <span id="log-view-title-mode">vlog ❯</span>
+            </div>
+            <div class="log-view-icons-right">
+                <button class="log-view-icon-btn" onclick="alert('分享手記')">📤</button>
+                <button class="log-view-icon-btn" onclick="alert('手記對話面板')">💬</button>
+            </div>
+        </div>
+        <div class="log-video-card">
+            <div class="log-user-info">
+                <div class="log-user-avatar" id="log-user-avatar-tag">Ref</div>
+                <div class="log-user-name" id="log-user-name-tag">A</div>
+            </div>
+            <video id="log-output-player" controls></video>
+            <div class="subtitle-action-box">
+                <button class="edit-sub-btn" onclick="App.handleEditSubtitle()">
+                    <span>字📝</span> 編輯字幕
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="lohas-full-overlay" id="overlay-landscape-camera">
+        <div class="camera-inner-container">
+            <video id="landscape-video-render" autoplay playsinline muted></video>
+            <div id="flash-overlay"></div>
+            
+            <div class="camera-ui-layer">
+                <div></div>
+                <div class="cam-center-panel">
+                    <div class="cam-countdown-text" id="cam-live-countdown">00:03</div>
+                    <div class="cam-zoom-selectors">
+                        <span class="zoom-opt" onclick="App.setZoom(this, '.5')">.5</span>
+                        <span class="zoom-opt active" onclick="App.setZoom(this, '1')">1</span>
+                        <span class="zoom-opt" onclick="App.setZoom(this, '2')">2</span>
+                    </div>
+                </div>
+                
+                <div class="cam-right-panel">
+                    <div class="cam-close-wrapper">
+                        <button class="cam-btn" onclick="App.closeFullOverlay('overlay-landscape-camera')" style="background:rgba(255,255,255,0.15);">✕</button>
+                    </div>
+                    
+                    <div class="shutter-interactive-group" id="shutter-core-container">
+                        <button class="shutter-sub-btn" id="cam-flash-toggle">⚡</button>
+                        <button class="shutter-sub-btn" id="cam-timer-toggle">⏱️</button>
+                        <button class="shutter-sub-btn" id="cam-facing-toggle">🔄</button>
+                        <div class="cam-shutter-outer" id="main-shutter-clicker">
+                            <div class="cam-shutter-inner" id="cam-shutter-icon">📸</div>
+                        </div>
+                    </div>
+                    <div></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="mascot-container">
         <div class="mascot-left-group">
-            <div id="mascot-display">🐢</div>
-            <div id="vlg-status-text">LohasVLG手記</div>
+            <div id="mascot-display" title="點擊提示拍攝方向">🐢</div>
+            <div id="vlg-status-text">LohasVLG AI手記</div>
         </div>
-        <div id="mascot-right-btn">🐢</div>
+        <div id="mascot-right-btn" title="點擊直接啟動記錄閃光">🐢</div>
     </div>
 
     <div class="camera-preview-wrapper">
-        <div class="camera-status-tag">
+        <div class="camera-status-tag" id="lohas-camera-tag">
             <span class="status-dot"></span>
-            <span>📷 轉橫向更生鬼</span>
+            <span id="lohas-tag-text">📷 鏡頭就緒 (轉橫向更生鬼)</span>
         </div>
         <video id="vlg-video-player" autoplay playsinline muted></video>
+
         <div class="camera-mode-selectors">
-            <div class="mode-opt active" id="mode-photo" onclick="App.switchCameraMode('photo')">拍攝照片</div>
-            <div class="mode-opt" id="mode-video" onclick="App.switchCameraMode('video')">錄製影片</div>
+            <div class="mode-opt active" id="mode-photo" onclick="App.handleModeTabClick('photo')">拍攝照片</div>
+            <div class="mode-opt" id="mode-video" onclick="App.handleModeTabClick('video')">錄製影片</div>
         </div>
     </div>
 
-    <div class="vlog-info-card" onclick="alert('進入 vlog 專屬空間設定')">
-        <span class="vlog-card-title">vlog</span>
-        <p class="vlog-card-desc">這是你的專屬空間，每一天從凌晨 4 點到隔天凌晨 4 點。</p>
-        <div class="star-bubble-icon">⭐</div>
-    </div>
-
-    <div class="share-eat-toolbar">
-        <span class="share-text">Share with eat</span>
-        <div class="share-tools-group">
-            <button class="tool-btn" title="使用者頭像導引" onclick="alert('切換分享對象')">👤</button>
-            <button class="tool-btn" title="即時相機快捷鍵" onclick="App.trigger()">📷</button>
-        </div>
-    </div>
-
-    <div id="ai-text">✨ 點擊「記錄閃光」捕捉今日生活；集滿 3 段解鎖「生成日記」！</div>
+    <div id="ai-text">✨ 點擊「記錄閃光」捕捉今日生活；集滿 3 段解鎖「生成日記」與死黨一同連線！</div>
 
     <div class="vlg-controls">
         <button id="vlg-start-btn">記錄閃光</button>
-        <button id="vlg-generate-btn">生成日記</button>
+        
+        <div class="generate-btn-wrapper" id="lohas-generate-box">
+            
+            <div class="generate-drawer-box" id="lohas-drawer-content">
+                <div class="vlog-info-card" onclick="alert('進入 vlog 專屬空間設定')">
+                    <span class="vlog-card-title">vlog</span>
+                    <p class="vlog-card-desc">這是你的專屬空間，每一天從凌晨 4 點到隔天凌晨 4 點。</p>
+                    <div class="star-bubble-icon">⭐</div>
+                </div>
+
+                <div class="share-eat-toolbar">
+                    <span class="share-text">Share with eat</span>
+                    <div class="share-tools-group">
+                        <button class="tool-btn" title="使用者頭像導引" onclick="alert('切換分享對象')">👤</button>
+                        <button class="tool-btn" title="即時相機快捷鍵" onclick="App.trigger()">📷</button>
+                    </div>
+                </div>
+            </div>
+
+            <button id="vlg-generate-btn">生成日記</button>
+        </div>
     </div>
 
     <div class="counter-box">
         已蒐集樂活晶片：<span id="vlg-count">0</span> / 3
     </div>
 
-    <div class="lohas-full-overlay" id="overlay-view-log"></div>
-    <div class="lohas-full-overlay" id="overlay-landscape-camera"></div>
-    <div class="lohas-modal-overlay" id="name-modal-overlay"></div>
-    <div class="photo-preview-overlay" id="photo-preview-box"></div>
+    <div class="lohas-modal-overlay" id="name-modal-overlay">
+        <div class="lohas-modal">
+            <div class="modal-title">編輯名字</div>
+            <div class="modal-subtitle">輸入你的名字</div>
+            <div class="modal-input-box">
+                <input type="text" id="input-user-name" value="A" placeholder="請輸入名字">
+            </div>
+            <div class="modal-btns">
+                <button class="modal-btn cancel" id="modal-cancel-btn">取消</button>
+                <button class="modal-btn save" id="modal-save-btn">儲存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="photo-preview-overlay" id="photo-preview-box">
+        <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 15px;">📸 樂活碎片照片已捕獲！</div>
+        <img id="captured-image-view" src="" alt="Captured Image">
+        <div style="display:flex; gap:15px; width:100%; margin-top:20px;">
+            <button style="background:#2D2D2D; color:#fff; padding:12px; border-radius:20px; font-weight:bold; flex:1; border:none; cursor:pointer;" onclick="App.closePhotoPreview()">重新拍攝</button>
+            <button style="background:var(--accent-pink); color:#fff; padding:12px; border-radius:20px; font-weight:bold; flex:1; border:none; cursor:pointer;" onclick="App.savePhotoToClips()">確認保留</button>
+        </div>
+    </div>
 </main>
 
 <canvas id="photo-capture-canvas" style="display:none;" width="640" height="480"></canvas>
 
 <script>
-// 主題陣列
 const themes = [
     { bg:'#FF9A9E', icon:'🐢', msg:'慢慢走也很好', filter:'sepia(0.3)' },
     { bg:'#A1C4FD', icon:'🐬', msg:'跳進自由感', filter:'contrast(1.2)' },
-    { bg:'#FFD1FF', icon:'🦄', msg:'夢幻一下', filter:'brightness(1.2)' }
+    { bg:'#FFD1FF', icon:'🦄', msg:'夢幻一下', filter:'brightness(1.2)' },
+    { bg:'#FFF3B0', icon:'🌞', msg:'陽光正好', filter:'saturate(1.4)' },
+    { bg:'#C1FBA4', icon:'🌿', msg:'呼吸自然', filter:'hue-rotate(20deg)' },
+    { bg:'#FEC8D8', icon:'🐰', msg:'溫柔一天', filter:'contrast(1.1)' },
+    { bg:'#B5EAD7', icon:'🐳', msg:'像海一樣靜', filter:'blur(1px)' },
+    { bg:'#C7CEEA', icon:'🌙', msg:'夜晚也美', filter:'brightness(0.8)' },
+    { bg:'#FFDAC1', icon:'☕', msg:'屬於你的時光', filter:'sepia(0.5)' },
+    { bg:'#FFB7B2', icon:'🍓', msg:'微甜日', filter:'saturate(1.6)' }
 ];
 
 let currentIcon = '🐢';
 
-const App = {
-    count: 0,
-    stream: null,
-    cameraMode: 'photo',
+function generateAIText(theme){
+    const templates = [
+        `今天的我，有點 ${theme.msg} 的感覺 🌿`,
+        `生活在提醒我：${theme.msg}`,
+        `這一刻，很適合 ${theme.msg}`,
+        `把今天收進記憶裡：${theme.msg}`,
+        `也許這就是日常的意義：${theme.msg}`
+    ];
+    return templates[Math.floor(Math.random()*templates.length)];
+}
 
-    async init() {
-        try {
-            this.stream = await navigator.mediaDevices.getUserMedia({video:true, audio:true});
-            document.getElementById("vlg-video-player").srcObject = this.stream;
-        } catch(e) { console.log("相機權限受限。"); }
-        this.initButtons();
+const App = {
+    count:0,
+    stream:null,
+    recorder:null,
+    chunks:[],
+    clips:[],
+
+    cameraMode: 'photo', 
+    isRecording: false,
+    tempPhotoBlob: null,
+    recordTimeout: null,
+    
+    isFlashOn: false,
+    facingMode: 'user', 
+    activeTimer: null,
+    countdownDuration: 3, 
+
+    async init(){
+        await this.startCamera();
+        this.initNavigationMenus();
+        this.initMascotButtons(); 
+        this.initHardwareButtons(); 
+        this.initShutter收納交互邏輯();
+        this.initGenerateBtn收納手勢邏輯(); // 🚀 初始化「生成日記」長按收納技術
+        this.simulateIncomingNotification();
+        this.switchCameraMode('photo');
     },
 
-    initButtons() {
-        document.getElementById('vlg-start-btn').onclick = () => this.trigger();
-        document.getElementById('vlg-generate-btn').onclick = () => alert('生成日記中...');
-        // 公仔鍵連動
-        document.getElementById('mascot-right-btn').onclick = () => this.trigger();
+    async startCamera() {
+        if (this.stream) { this.stream.getTracks().forEach(track => track.stop()); }
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: this.facingMode },
+                audio: true
+            });
+            document.getElementById("vlg-video-player").srcObject = this.stream;
+            const landVideo = document.getElementById('landscape-video-render');
+            if(landVideo) landVideo.srcObject = this.stream;
+        } catch(e) { console.log("鏡頭模擬器模式啟用。"); }
+    },
+
+    // 🚀 實作：「vlog卡片」與「Share工具列」在生成日記大按鈕內的長按收納邏輯
+    initGenerateBtn收納手勢邏輯() {
+        const generateBox = document.getElementById('lohas-generate-box');
+        const generateBtn = document.getElementById('vlg-generate-btn');
+        let pressTimer = null;
+
+        // 動作 A：短按大按鈕，直接執行原有的日記生成
+        generateBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // 如果收納盒是打開的，點擊會先將其關閉，並直接生成日記成果
+            if(generateBox.classList.contains('drawer-expanded')) {
+                generateBox.classList.remove('drawer-expanded');
+            }
+            this.generate(); // 呼罩日記生成核心
+        });
+
+        // 動作 B：按住按鈕 500ms（長按手勢）像抽屜一樣向上滑動展現 vlog卡片 與 Share工具列
+        generateBtn.addEventListener('mousedown', startPress);
+        generateBtn.addEventListener('touchstart', startPress, {passive: true});
+        generateBtn.addEventListener('mouseup', cancelPress);
+        generateBtn.addEventListener('mouseleave', cancelPress);
+        generateBtn.addEventListener('touchend', cancelPress);
+
+        function startPress(e) {
+            pressTimer = setTimeout(() => {
+                generateBox.classList.toggle('drawer-expanded');
+                console.log("🚀 觸發生成日記按鈕長按手勢：vlog卡片與工具列已" + (generateBox.classList.contains('drawer-expanded') ? "向上彈出" : "收納隱藏"));
+            }, 500);
+        }
+        function cancelPress() { clearTimeout(pressTimer); }
+
+        // 點擊畫面任意空白處，自動收納隱藏抽屜盒
+        document.addEventListener('click', () => {
+            generateBox.classList.remove('drawer-expanded');
+        });
+        document.getElementById('lohas-drawer-content').addEventListener('click', (e) => {
+            e.stopPropagation(); // 防止點擊收納盒內部組件時被關閉
+        });
+    },
+
+    initShutter收納交互邏輯() {
+        const shutterContainer = document.getElementById('shutter-core-container');
+        const clicker = document.getElementById('main-shutter-clicker');
+        let pressTimer = null;
+
+        clicker.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if(shutterContainer.classList.contains('expanded')) { shutterContainer.classList.remove('expanded'); }
+            this.executeShutterAction();
+        });
+
+        clicker.addEventListener('mousedown', startPress);
+        clicker.addEventListener('touchstart', startPress, {passive: true});
+        clicker.addEventListener('mouseup', cancelPress);
+        clicker.addEventListener('mouseleave', cancelPress);
+        clicker.addEventListener('touchend', cancelPress);
+
+        function startPress(e) {
+            pressTimer = setTimeout(() => { shutterContainer.classList.toggle('expanded'); }, 500);
+        }
+        function cancelPress() { clearTimeout(pressTimer); }
+    },
+
+    initHardwareButtons() {
+        const flashBtn = document.getElementById('cam-flash-toggle');
+        flashBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); this.isFlashOn = !this.isFlashOn;
+            flashBtn.classList.toggle('flash-on', this.isFlashOn);
+        });
+
+        document.getElementById('cam-facing-toggle').addEventListener('click', async (e) => {
+            e.stopPropagation(); this.facingMode = (this.facingMode === 'user') ? 'environment' : 'user';
+            await this.startCamera();
+        });
+
+        document.getElementById('cam-timer-toggle').addEventListener('click', (e) => {
+            e.stopPropagation(); this.countdownDuration = (this.countdownDuration === 3) ? 5 : (this.countdownDuration === 5) ? 10 : 3;
+            document.getElementById('cam-live-countdown').innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+        });
     },
 
     switchCameraMode(mode) {
+        if(this.isRecording) return;
         this.cameraMode = mode;
         document.getElementById('mode-photo').classList.toggle('active', mode === 'photo');
         document.getElementById('mode-video').classList.toggle('active', mode === 'video');
+        
+        const tagText = document.getElementById('lohas-tag-text');
+        const startBtn = document.getElementById('vlg-start-btn');
+        if(mode === 'photo') {
+            tagText.innerText = "📷 鏡頭就緒 (拍攝照片模式)";
+            startBtn.innerText = "拍攝照片";
+            startBtn.style.background = "#fff"; startBtn.style.color = "#000";
+        } else {
+            tagText.innerText = "📹 鏡頭就緒 (錄製影片模式)";
+            startBtn.innerText = "開始錄影";
+            startBtn.style.background = "#2D2D2D"; startBtn.style.color = "#fff";
+        }
     },
 
-    trigger() {
-        if(this.count >= 3) return alert("已滿片段");
+    handleModeTabClick(targetMode) {
+        if(this.isRecording && targetMode === 'photo') return;
+        if(this.cameraMode !== targetMode) { this.switchCameraMode(targetMode); } else { this.trigger(); }
+    },
+
+    trigger(){
+        if(this.count >= 3){ alert("已滿 3 個片段"); return; }
+        const landVideo = document.getElementById('landscape-video-render');
+        if(this.stream) landVideo.srcObject = this.stream;
+        document.getElementById('shutter-core-container').classList.remove('expanded');
+        
+        if(this.cameraMode === 'photo') {
+            document.getElementById('cam-live-countdown').innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+            document.getElementById('cam-shutter-icon').innerText = "📸";
+        } else {
+            document.getElementById('cam-live-countdown').innerText = "14:00";
+            document.getElementById('cam-shutter-icon').innerText = "😊";
+        }
+        document.getElementById('overlay-landscape-camera').style.display = 'flex';
+    },
+
+    executeShutterAction() {
+        let timeLeft = this.countdownDuration;
+        const countdownDisplay = document.getElementById('cam-live-countdown');
+
+        if(this.cameraMode === 'photo') {
+            clearInterval(this.activeTimer);
+            this.activeTimer = setInterval(() => {
+                timeLeft--;
+                countdownDisplay.innerText = "00:" + String(timeLeft).padStart(2, '0');
+                if (timeLeft <= 0) {
+                    clearInterval(this.activeTimer);
+                    this.performFinalCapture();
+                }
+            }, 1000);
+        } else {
+            this.performFinalCapture();
+        }
+    },
+
+    performFinalCapture() {
+        if (this.isFlashOn) {
+            const flashOverlay = document.getElementById('flash-overlay');
+            flashOverlay.style.opacity = '1';
+            setTimeout(() => flashOverlay.style.opacity = '0', 150);
+        }
+
         const t = themes[Math.floor(Math.random()*themes.length)];
         document.body.style.background = t.bg;
-        document.getElementById("mascot-display").innerText = t.icon;
-        document.getElementById("mascot-right-btn").innerText = t.icon;
+        currentIcon = t.icon; 
+        document.getElementById("mascot-display").innerText = currentIcon;
+        document.getElementById("mascot-right-btn").innerText = currentIcon;
+        document.getElementById("vlg-status-text").innerText = t.msg;
+        document.getElementById("vlg-video-player").style.filter = t.filter;
+        document.getElementById("ai-text").innerText = generateAIText(t);
+
+        this.closeFullOverlay('overlay-landscape-camera');
+
+        if(this.cameraMode === 'photo') { this.executePhotoCapture(); } else { this.executeVideoRecording(); }
+    },
+
+    setZoom(element, scale) {
+        const opts = element.parentNode.querySelectorAll('.zoom-opt');
+        opts.forEach(o => o.classList.remove('active'));
+        element.className.add('active');
+    },
+
+    executePhotoCapture() {
+        const video = document.getElementById('vlg-video-player');
+        const canvas = document.getElementById('photo-capture-canvas');
+        const ctx = canvas.getContext('2d');
+        try {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            canvas.toBlob((blob) => {
+                this.tempPhotoBlob = blob;
+                const url = URL.createObjectURL(blob);
+                document.getElementById('captured-image-view').src = url;
+                document.getElementById('photo-preview-box').style.display = 'flex';
+            }, 'image/jpeg');
+        } catch(e) {
+            this.count++;
+            document.getElementById("vlg-count").innerText = this.count;
+            this.checkProgress();
+        }
+    },
+    closePhotoPreview() { document.getElementById('photo-preview-box').style.display = 'none'; },
+    savePhotoToClips() {
+        if(this.tempPhotoBlob) this.clips.push(this.tempPhotoBlob);
         this.count++;
         document.getElementById("vlg-count").innerText = this.count;
-        alert(`已捕獲第 ${this.count} 段樂活晶片！`);
+        this.closePhotoPreview();
+        this.checkProgress();
+    },
+
+    executeVideoRecording() {
+        if(!this.isRecording) {
+            this.isRecording = true;
+            this.chunks = [];
+            document.getElementById('vlg-start-btn').innerText = "停止錄影";
+            document.getElementById('vlg-start-btn').style.background = "#FF3B30";
+            document.getElementById('vlg-start-btn').style.color = "#fff";
+            document.getElementById('lohas-status-dot').classList.add('recording');
+            document.getElementById('lohas-tag-text').innerText = "🔴 正在錄製影片中...";
+
+            if(this.stream) {
+                this.recorder = new MediaRecorder(this.stream);
+                this.recorder.ondataavailable = e => this.chunks.push(e.data);
+                this.recorder.onstop = ()=>{
+                    const blob = new Blob(this.chunks, {type: "video/webm"});
+                    this.clips.push(blob);
+                    this.count++;
+                    document.getElementById("vlg-count").innerText = this.count;
+                    this.checkProgress();
+                };
+                this.recorder.start();
+                this.recordTimeout = setTimeout(() => { if(this.isRecording) this.executeVideoRecording(); }, 3000);
+            } else {
+                this.recordTimeout = setTimeout(() => { if(this.isRecording) this.executeVideoRecording(); }, 3000);
+            }
+        } else {
+            this.isRecording = false;
+            clearTimeout(this.recordTimeout);
+            document.getElementById('vlg-start-btn').innerText = "開始錄影";
+            document.getElementById('vlg-start-btn').style.background = "#2D2D2D";
+            document.getElementById('vlg-start-btn').style.color = "#fff";
+            document.getElementById('lohas-status-dot').classList.remove('recording');
+            document.getElementById('lohas-tag-text').innerText = "📹 鏡頭就緒 (錄製影片模式)";
+            if(this.recorder && this.recorder.state !== "inactive") { this.recorder.stop(); } else if(!this.stream) { this.count++; document.getElementById("vlg-count").innerText = this.count; this.checkProgress(); }
+        }
+    },
+
+    checkProgress() {
+        if(this.count < 3) {
+            document.getElementById('lohas-bell-badge').style.display = 'block';
+            document.getElementById('noti-content').innerHTML = `溫馨小幫手：今天還差 ${3 - this.count} 個片段就能生成日記囉！`;
+        }
+    },
+
+    handleEditSubtitle() { alert("✨ [言語治療訓練模組] 正在調用 Web Speech API 進行語音校正辨識與字幕手記編輯..."); },
+
+    generate() {
+        if(this.count<3){ alert("請先收集3段"); return; }
+        const final = new Blob(this.clips,{type:"video/webm"});
+        const url = URL.createObjectURL(final);
+        const v = document.getElementById("vlg-video-player");
+        v.srcObject = null; v.src = url; v.controls = true;
+        document.getElementById("vlg-status-text").innerText="🎬 完成!";
+        const logPlayer = document.getElementById("log-output-player");
+        logPlayer.src = url;
+        document.getElementById("overlay-view-log").style.display = "flex";
+        document.getElementById('lohas-bell-badge').style.display = 'block';
+        document.getElementById('noti-content').innerHTML = `🎉 成功解鎖！今天的每日手記已生成，並已同步連線分享給死黨！`;
+    },
+
+    initNavigationMenus() {
+        const mainPops = ['popover-plus', 'popover-bell', 'popover-main-menu', 'popover-sub-profile', 'popover-sub-colors', 'popover-sub-noti', 'popover-sub-account'];
+        function closeAllPops() { mainPops.forEach(id => document.getElementById(id).style.display = 'none'); }
+
+        document.getElementById('lohas-plus-btn').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-plus').style.display = 'block'; });
+        document.getElementById('lohas-bell-btn').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-bell').style.display = 'block'; document.getElementById('lohas-bell-badge').style.display = 'none'; });
+        document.getElementById('lohas-more-btn').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
+
+        document.getElementById('item-create-log').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('overlay-create-log').style.display = 'flex'; });
+        document.getElementById('item-join-log').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('overlay-join-log').style.display = 'flex'; document.getElementById('input-log-code').focus(); });
+        document.getElementById('item-edit-profile').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-profile').style.display = 'block'; });
+        document.getElementById('item-noti-settings').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-noti').style.display = 'block'; });
+        document.getElementById('item-account-settings').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-account').style.display = 'block'; });
+
+        document.getElementById('back-to-main-1').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
+        document.getElementById('back-to-main-2').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
+        document.getElementById('back-to-main-3').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
+        document.getElementById('sub-item-change-color').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-colors').style.display = 'block'; });
+        document.getElementById('back-to-profile').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-profile').style.display = 'block'; });
+
+        const colorOpts = document.querySelectorAll('.color-opt');
+        colorOpts.forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                e.stopPropagation();
+                colorOpts.forEach(o => o.classList.remove('selected'));
+                opt.classList.add('selected');
+                const selectedColor = opt.getAttribute('data-color');
+                document.documentElement.style.setProperty('--accent-pink', selectedColor);
+                document.getElementById('vlg-video-player').style.borderColor = selectedColor;
+            });
+        });
+
+        document.getElementById('sub-item-change-name').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('name-modal-overlay').style.display = 'flex'; document.getElementById('input-user-name').focus(); });
+        document.getElementById('modal-cancel-btn').addEventListener('click', () => { document.getElementById('name-modal-overlay').style.display = 'none'; });
+        document.getElementById('modal-save-btn').addEventListener('click', () => { 
+            const newName = document.getElementById('input-user-name').value.trim(); 
+            if(newName) {
+                document.getElementById('display-user-name').innerText = newName;
+                document.getElementById('log-user-name-tag').innerText = newName;
+                document.getElementById('log-user-avatar-tag').innerText = newName.charAt(0);
+            }
+            document.getElementById('name-modal-overlay').style.display = 'none'; 
+        });
+        document.addEventListener('click', () => closeAllPops());
+    },
+
+    initMascotButtons() {
+        document.getElementById('mascot-display').addEventListener('click', (e) => { e.stopPropagation(); alert(`💡 樂活提示：轉橫向拍攝畫面更生鬼有趣喔！`); });
+        document.getElementById('mascot-right-btn').addEventListener('click', (e) => { e.stopPropagation(); this.trigger(); });
     }
 };
 
