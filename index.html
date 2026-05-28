@@ -127,6 +127,7 @@ body {
     align-items: center;
     margin-bottom: 20px;
     border: 1px solid rgba(255, 255, 255, 0.03);
+    cursor: pointer;
 }
 .share-text {
     font-size: 1.1rem;
@@ -338,9 +339,9 @@ button {
 /* 📸 拍攝模式：雷達呼吸發光圈樣式 */
 .mode-shutter-active { 
     background: #fff !important; 
-    color: #000 !important; 
+    color: #000 !important;
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4) !important;
-    animation: shutterPulse 2s infinite !important; 
+    animation: shutterPulse 2s infinite !important;
 }
 @keyframes shutterPulse {
     0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
@@ -364,11 +365,11 @@ button {
 /* 📖 日記按鈕持續維持左右微幅擺動動畫 */
 .book-wiggle-effect { 
     background: #2D2D2D !important; 
-    color: #fff !important; 
+    color: #fff !important;
     animation: bookWiggle 3s infinite ease-in-out !important; 
 }
 .book-wiggle-effect:hover { 
-    background: #3D3D3D !important; 
+    background: #3D3D3D !important;
     box-shadow: 0 0 15px rgba(255, 100, 200, 0.4) !important;
 }
 @keyframes bookWiggle {
@@ -439,7 +440,8 @@ button {
 /* 📥 全螢幕遮罩層基礎 */
 .lohas-full-overlay {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
     background: #000000;
     z-index: 150;
     border-radius: 40px;
@@ -469,34 +471,45 @@ button {
     cursor: pointer;
     display: flex; justify-content: center; align-items: center;
 }
-.overlay-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 25px; display: flex; align-items: center; gap: 8px; }
+.overlay-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 25px; display: flex; align-items: center;
+    gap: 8px; }
 .overlay-label { font-size: 1rem; color: #8E8E93; margin-bottom: 12px; }
-.overlay-input { background: transparent; border: none; border-bottom: 1px solid #333; color: #fff; font-size: 1.2rem; width: 100%; padding: 8px 0; outline: none; margin-bottom: 30px; }
+.overlay-input { background: transparent; border: none; border-bottom: 1px solid #333;
+    color: #fff; font-size: 1.2rem; width: 100%; padding: 8px 0; outline: none; margin-bottom: 30px; }
 .overlay-input::placeholder { color: #444; }
 
 .member-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 5px; }
-.member-chip { background: #000; border: 1px solid #333; border-radius: 12px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 500; color: #fff; cursor: pointer; transition: all 0.2s; }
+.member-chip { background: #000; border: 1px solid #333;
+    border-radius: 12px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 500; color: #fff; cursor: pointer;
+    transition: all 0.2s; }
 .member-chip.selected { background: var(--accent-pink); border-color: var(--accent-pink); color: #fff; }
 
-.code-input-container { background: #fff; border-radius: 25px; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; margin-top: 15px; }
+.code-input-container { background: #fff; border-radius: 25px; padding: 15px 20px;
+    display: flex; align-items: center; justify-content: space-between; margin-top: 15px; }
 .code-hash { font-size: 1.5rem; color: #000; font-weight: bold; margin-right: 10px; }
 .code-input-field { background: transparent; border: none; color: #000; font-size: 1.4rem; width: 100%; outline: none; }
 .code-input-field::placeholder { color: #ccc; }
-.code-submit-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-pink); border: none; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem; }
+.code-submit-btn { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-pink); border: none; color: #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 1.1rem; }
 
 /* 📂 復刻手記與字幕編輯全螢幕面層 */
 #overlay-view-log { background: #000000; }
-.log-view-top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.log-view-top-bar { display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px; }
 .log-view-nav-left { display: flex; align-items: center; gap: 15px; font-size: 1.1rem; font-weight: bold; }
 .log-view-icons-right { display: flex; gap: 12px; }
 .log-view-icon-btn { background: transparent; border: none; color: #fff; font-size: 1.3rem; cursor: pointer; padding: 4px; }
-.log-video-card { width: 100%; background: #111112; border-radius: 24px; overflow: hidden; position: relative; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.03); }
+.log-video-card { width: 100%; background: #111112;
+    border-radius: 24px; overflow: hidden; position: relative; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.03); }
 .log-user-info { display: flex; align-items: center; gap: 10px; padding: 16px; }
-.log-user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-pink); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: bold; }
+.log-user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-pink);
+    display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: bold; }
 .log-user-name { font-size: 0.95rem; font-weight: 500; }
-#log-output-player { width: 100%; height: 220px; background: #000; object-fit: cover; display: block; }
+#log-output-player { width: 100%;
+    height: 220px; background: #000; object-fit: cover; display: block; }
 .subtitle-action-box { display: flex; justify-content: center; padding: 20px 16px; background: #111112; }
-.edit-sub-btn { background: rgba(255, 255, 255, 0.08); border: none; border-radius: 20px; padding: 10px 24px; color: #fff; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
+.edit-sub-btn { background: rgba(255, 255, 255, 0.08); border: none; border-radius: 20px; padding: 10px 24px; color: #fff; font-size: 0.95rem; cursor: pointer;
+    display: flex; align-items: center; gap: 8px; transition: background 0.2s; }
 .edit-sub-btn:hover { background: rgba(255, 255, 255, 0.15); }
 
 /* 🌟 橫向專業相機拍攝全螢幕遮罩層 */
@@ -641,21 +654,27 @@ button {
 }
 
 /* 名字編輯、照片預覽燈箱 */
-.lohas-modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 200; display: flex; justify-content: center; align-items: center; border-radius: 40px; display: none; }
-.lohas-modal { background: #222226; width: 85%; border-radius: 28px; padding: 22px; text-align: left; }
+.lohas-modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px); z-index: 200; display: flex; justify-content: center; align-items: center; border-radius: 40px; display: none; }
+.lohas-modal { background: #222226; width: 85%;
+    border-radius: 28px; padding: 22px; text-align: left; }
 .modal-title { font-size: 1.15rem; font-weight: bold; margin-bottom: 4px; }
-.modal-subtitle { font-size: 0.85rem; color: #8E8E93; margin-bottom: 16px; }
+.modal-subtitle { font-size: 0.85rem; color: #8E8E93;
+    margin-bottom: 16px; }
 .modal-input-box { background: #2C2C30; border-radius: 14px; padding: 12px; margin-bottom: 20px; }
-.modal-input-box input { background: transparent; border: none; color: #fff; width: 100%; font-size: 1rem; outline: none; }
+.modal-input-box input { background: transparent; border: none;
+    color: #fff; width: 100%; font-size: 1rem; outline: none; }
 .modal-btns { display: flex; gap: 12px; }
-.modal-btn { flex: 1; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 0.95rem; border: none; cursor: pointer; text-align: center; }
+.modal-btn { flex: 1; padding: 12px;
+    border-radius: 20px; font-weight: bold; font-size: 0.95rem; border: none; cursor: pointer; text-align: center; }
 .modal-btn.cancel { background: #2C2C30; color: #fff; }
 .modal-btn.save { background: var(--accent-pink); color: #fff; }
 
-/* 照片編輯與分享目的地傳送面層 (結構完美保留鎖定) */
+/* 照片編輯與獨立分流傳送面層 */
 .photo-preview-overlay { 
     position: absolute; 
-    top: 0; left: 0; right: 0; bottom: 0; 
+    top: 0; left: 0;
+    right: 0; bottom: 0; 
     background: #000000;
     z-index: 250; 
     border-radius: 40px; 
@@ -676,7 +695,8 @@ button {
     background: transparent; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;
 }
 .preview-upload-btn {
-    background: rgba(255,255,255,0.12); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem;
+    background: rgba(255,255,255,0.12); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem;
 }
 .editor-image-container {
     position: relative;
@@ -688,7 +708,7 @@ button {
     margin-bottom: 15px;
 }
 #captured-image-view { 
-    width: 100%; 
+    width: 100%;
     max-height: 200px; 
     object-fit: cover; 
     display: block; 
@@ -728,7 +748,6 @@ button {
 }
 .editor-text-field::placeholder { color: #555; }
 
-/* 📤 傳送目的地列表 */
 .share-destination-panel {
     width: 100%;
     text-align: left;
@@ -799,7 +818,6 @@ body {
             </button>
             <button class="nav-btn" id="lohas-more-btn" title="更多設定">•••</button>
  
-            
             <div class="lohas-popover" id="popover-plus" style="right: 90px; top: 45px; width: 160px;">
                 <div class="popover-item" id="item-create-log"><div class="left-sec">📝 建立手記</div></div>
                 <div class="popover-item" id="item-join-log"><div class="left-sec">👥 加入手記</div></div>
@@ -834,7 +852,6 @@ body {
                 <div class="popover-item color-opt" data-color="#FF9500"><div class="left-sec"><span class="color-dot" style="background:#FF9500;"></span>&nbsp;&nbsp;橘色</div><span class="check-mark">✓</span></div>
                 <div class="popover-item color-opt" data-color="#AF52DE"><div class="left-sec"><span class="color-dot" style="background:#AF52DE;"></span>&nbsp;&nbsp;紫色</div><span class="check-mark">✓</span></div>
                 <div class="popover-item color-opt" data-color="#34C759"><div class="left-sec"><span class="color-dot" style="background:#34C759;"></span>&nbsp;&nbsp;綠色</div><span class="check-mark">✓</span></div>
-    
                 <div class="popover-item color-opt" data-color="#5AC8FA"><div class="left-sec"><span class="color-dot" style="background:#5AC8FA;"></span>&nbsp;&nbsp;海</div><span class="check-mark">✓</span></div>
                 <div class="popover-item color-opt selected" data-color="#FF64C8"><div class="left-sec"><span class="color-dot" style="background:#FF64C8;"></span>&nbsp;&nbsp;粉紅色</div><span class="check-mark">✓</span></div>
             </div>
@@ -854,7 +871,7 @@ body {
                 <div class="popover-item" onclick="alert('刪除帳號')"><div class="left-sec" style="color:#FF3B30;">刪除帳號</div></div>
             </div>
        
-  </div>
+        </div>
     </div>
 
     <div class="lohas-full-overlay" id="overlay-create-log">
@@ -866,7 +883,7 @@ body {
         <div class="overlay-label">日誌名稱 (可選)</div>
         <input type="text" class="overlay-input" placeholder="輸入日誌名稱">
         <div class="overlay-label" style="margin-top: 10px;">日誌人數</div>
-  
+ 
         <div class="member-grid">
             <div class="member-chip" onclick="App.selectMember(this)">2</div>
             <div class="member-chip" onclick="App.selectMember(this)">3</div>
@@ -874,7 +891,6 @@ body {
             <div class="member-chip" onclick="App.selectMember(this)">5</div>
             <div class="member-chip" onclick="App.selectMember(this)">6</div>
             <div class="member-chip" onclick="App.selectMember(this)">7</div>
-        
             <div class="member-chip" onclick="App.selectMember(this)">8</div>
             <div class="member-chip" onclick="App.selectMember(this)">9</div>
             <div class="member-chip" onclick="App.selectMember(this)">10</div>
@@ -885,7 +901,6 @@ body {
 
     <div class="lohas-full-overlay" id="overlay-join-log" style="background: #1A1A1A;">
         <div class="overlay-top" style="margin-bottom: 20px;">
-       
             <button class="overlay-close-btn" onclick="App.closeFullOverlay('overlay-join-log')">✕</button>
             <div></div>
         </div>
@@ -901,7 +916,6 @@ body {
     </div>
 
     <div class="lohas-full-overlay" id="overlay-view-log">
- 
         <div class="log-view-top-bar">
             <div class="log-view-nav-left">
                 <button class="log-view-icon-btn" onclick="App.closeFullOverlay('overlay-view-log')" style="font-size:1.1rem;">❮</button>
@@ -916,15 +930,13 @@ body {
             <div class="log-user-info">
                 <div class="log-user-avatar" id="log-user-avatar-tag">ア</div>
                 <div class="log-user-name" id="log-user-name-tag">A</div>
-   
-          </div>
+            </div>
             <video id="log-output-player" controls></video>
             <div class="subtitle-action-box">
                 <button class="edit-sub-btn" onclick="App.handleEditSubtitle()">
                     <span>字📝</span> 編輯字幕
                 </button>
-         
-    </div>
+            </div>
         </div>
     </div>
 
@@ -934,25 +946,21 @@ body {
             <div id="flash-overlay"></div>
             
             <div class="camera-ui-layer">
-                
-<div class="cam-left-panel">
+                <div class="cam-left-panel">
                     <button class="cam-btn" id="cam-flash-toggle">⚡</button>
                     <button class="cam-btn" id="cam-timer-toggle">⏱️</button>
                 </div>
                 
                 <div class="cam-center-panel">
-      
-                    <div class="cam-countdown-text" id="cam-live-countdown">00:03</div>
+                    <div class="cam-countdown-text" id="cam-live-countdown">00:00</div>
                     <div class="cam-zoom-selectors">
                         <span class="zoom-opt" onclick="App.setZoom(this, '.5')">.5</span>
                         <span class="zoom-opt active" onclick="App.setZoom(this, '1')">1</span>
-        
                         <span class="zoom-opt" onclick="App.setZoom(this, '2')">2</span>
                     </div>
                 </div>
                 
                 <div class="cam-right-panel">
-            
                     <button class="cam-btn" onclick="App.closeFullOverlay('overlay-landscape-camera')" style="background:rgba(255,255,255,0.15);">✕</button>
                     <div class="cam-shutter-outer" onclick="App.executeShutterAction()">
                         <div class="cam-shutter-inner" id="cam-shutter-icon">📸</div>
@@ -993,8 +1001,8 @@ body {
     <div class="share-eat-toolbar">
         <span class="share-text">Share with eat共享佳餚美酒</span>
         <div class="share-tools-group">
-            <button class="tool-btn" title="使用者頭像導引" onclick="alert('切換分享對象')">👤</button>
-            <button class="tool-btn" title="即時相機快捷鍵" onclick="App.trigger()">📸</button>
+            <button class="tool-btn" id="toolbar-avatar-trigger" title="切換分享對象">👤</button>
+            <button class="tool-btn" id="toolbar-camera-trigger" title="直接開啟相機">📸</button>
         </div>
     </div>
 
@@ -1046,7 +1054,7 @@ body {
                         <div class="dest-circle-icon"></div>
                         <div class="dest-name">Vlog日誌</div>
                     </div>
-                    <div class="dest-emoji">😊</div>
+                    <div class="dest-emoji">🏠</div>
                 </div>
                 <div class="destination-row" onclick="App.toggleDestRow(this, 'morning')">
                     <div class="dest-left">
@@ -1082,16 +1090,133 @@ const themes = [
     { bg:'#FFDAC1', icon:'☕', msg:'屬於你的時光', filter:'sepia(0.5)' },
     { bg:'#FFB7B2', icon:'🍓', msg:'微甜日', filter:'saturate(1.6)' }
 ];
-
 let currentIcon = '🐢';
 
+// 🌟 核心升級：實裝 100 種不同情感與語境維度的 AI 日記模版陣列庫
 function generateAIText(theme){
     const templates = [
+        // 1-10: 日常覺察維度
         `今天的我，有點 ${theme.msg} 的感覺 🌿`,
         `生活在提醒我：${theme.msg}`,
         `這一刻，很適合 ${theme.msg}`,
         `把今天收進記憶裡：${theme.msg}`,
-        `也許這就是日常的意義：${theme.msg}`
+        `也許這就是日常的意義：${theme.msg}`,
+        `靜下心體會，原來此時此刻 ${theme.msg} ✨`,
+        `換個視角看世界，今天的主題是 ${theme.msg}。`,
+        `今天的風柔柔的，彷彿在說 ${theme.msg}。`,
+        `給自己按個讚，今天達成了 ${theme.msg} 的日常！`,
+        `日子淡淡的，但因為 ${theme.msg} 而有了色彩。`,
+
+        // 11-20: 溫馨陪伴維度
+        `不論世界有多忙碌，別忘了陪自己 ${theme.msg}。`,
+        `老友，今天想邀請你和我一同 ${theme.msg} ☕`,
+        `給心靈充個電，現在最適合 ${theme.msg} 啦。
+`,
+        `聽一首歌，喝一杯茶，感受 ${theme.msg} 的片刻。`,
+        `生活不用每天都完美，只要能 ${theme.msg} 就很幸福。`,
+        `今天的小確幸，莫過於能夠安全地 ${theme.msg}。`,
+        `這條手記日誌，記錄著我正在 ${theme.msg} 的真實感。`,
+        `打開 LohasVLG，寫下這一秒的 ${theme.msg} 吧。`,
+        `希望螢幕另一端的你，今天也能像我這樣 ${theme.msg}。`,
+        `送你一朵小紅花，願你今晚的夢境也是 ${theme.msg}。`,
+
+        // 21-30: 智慧反思維度
+        `歲月漫漫，讓我們學會用 ${theme.msg} 的態度去面對生活。`,
+        `智慧的累積，往往隱藏在 ${theme.msg} 的細節裡。`,
+        `今天的智慧箴言：永遠記得保持 ${theme.msg} 的初心。`,
+        `放慢腳步，才能看清原來 ${theme.msg} 才是最重要的。`,
+        `回首今日，最美的風景其實是自己那份 ${theme.msg}。`,
+        `生活是一面鏡子，你若保持 ${theme.msg}，世界就對你微笑。`,
+        `用一盞茶的時間，沉澱出 ${theme.msg} 的淡定。`,
+        `不疾不徐，今天的收穫正是學會了 ${theme.msg}。`,
+        `認知生活、熱愛生活，今天用 ${theme.msg} 寫下註解。`,
+        `把繁雜的雜音關掉，內心自然會浮現出 ${theme.msg}。`,
+
+        // 31-40: 樂活正念維度
+        `✨ 正念呼吸：吸氣時感受安穩，呼氣時放鬆並 ${theme.msg}。`,
+        `專注於眼前的這一刻，允許自己全面 ${theme.msg}。
+`,
+        `當心靜下來，你會發現 ${theme.msg} 是如此自然。`,
+        `不為昨天遺憾，不為明天焦慮，當下的任務是 ${theme.msg}。`,
+        `感覺一下自己的雙手與呼吸，試著讓身體 ${theme.msg}。`,
+        `自然地微笑，把意識帶回此時此地，享受 ${theme.msg}。`,
+        `今天的內在氣象：晴空萬里，適合 ${theme.msg}。`,
+        `像大樹一樣穩穩地站立，像流水一樣 ${theme.msg}。`,
+        `用溫柔的眼光看待周遭，今天一切都是 ${theme.msg}。`,
+        `活在當下，把每一顆碎片晶片化為 ${theme.msg} 的能量。`,
+
+        // 41-50: 鼓舞激勵維度
+        `拍拍肩膀對自己說：辛苦了，今天你展現了 ${theme.msg}！`,
+        `每一步都算數，哪怕前進得慢，依然走出了 ${theme.msg}。`,
+        `相信自己的節奏，你今天的力量在於 ${theme.msg}。`,
+        `挺起胸膛，把今日的碎片集滿，釋放 ${theme.msg} 的精彩。`,
+        `你比想像中更堅韌，今天就用 ${theme.msg} 來證明吧！`,
+        `跨出的每一小步，都在為 ${theme.msg} 的明天鋪路。`,
+        `即使偶爾停頓，也是為了下一段路能更精彩地 ${theme.msg}。`,
+        `生活因你的堅持而美好，繼續保持 ${theme.msg} 吧！`,
+        `沒有人能定義你的速度，走得生鬼、走得 ${theme.msg} 就對了。`,
+        `樂活的大門隨時敞開，只要你願意帶著 ${theme.msg} 出發。`,
+
+        // 51-60: 輕鬆幽默維度
+        `聽說點擊公仔 3 次的人，今天都會過得超級 ${theme.msg} 🌟`,
+        `科學家說（其實是我說的），現在是 ${theme.msg} 的最佳時機！`,
+        `今天的快樂指標已超標，原因竟然是偷偷在 ${theme.msg}？`,
+        `手機鏡頭已就緒，請保持一臉 ${theme.msg} 的搞笑表情！`,
+        `管它天氣幾度，內心保持 ${theme.msg} 就不會著涼。`,
+        `今天的任務清單：第一項是吃飯，第二項是快樂地 ${theme.msg}。`,
+        `捕捉到一隻正在發呆的樂活公仔，它悄悄暗示我要 ${theme.msg}。`,
+        `偷懶一下下也沒關係，這叫作有計畫地 ${theme.msg}。`,
+        `人生苦短，必須活得更生鬼、笑得更 ${theme.msg}！`,
+        `晶片提示：集滿 3 段生活碎片，即可兌換 ${theme.msg} 護照！`,
+
+        // 61-70: 社交連結維度
+        `把這段溫馨的 ${theme.msg} 分享出去，讓死黨們一同感受！`,
+        `獨樂樂不如眾樂樂，快呼叫阿明一起連線 ${theme.msg} 👥`,
+        `手記的溫度，來自我們共同記錄著 ${theme.msg} 的時光。`,
+        `今天的碎片貼文裡，滿滿都是我們期待 ${theme.msg} 的暗號。`,
+        `不論距離多遠，只要看見這條日誌，就知道你在 ${theme.msg}。`,
+        `共享佳餚美酒的同時，別忘了同步這份 ${theme.msg} 的心情。`,
+        `今天群組裡最生鬼的話題，一定是關於如何 ${theme.msg}。`,
+        `和在乎的人連線，把平淡的日常變成 ${theme.msg} 的派對。`,
+        `一條溫暖的對話，能讓彼此在 ${theme.msg} 中找到共鳴。`,
+        `點擊發布，這份 ${theme.msg} 正在實時傳遞給你的死黨。`,
+
+        // 71-80: 歲月靜好維度
+        `晨光拉長了影子的背影，空氣中瀰漫著 ${theme.msg} 的氣息。`,
+        `傍晚的霞光真美，正適合坐在窗邊安靜地 ${theme.msg}。`,
+        `歲月靜好，大抵就是此時此刻我們還能 ${theme.msg}。`,
+        `一件舊毛衣，一杯熱牛奶，還有那份不曾改變的 ${theme.msg}。`,
+        `日子過得慢一點吧，好讓我把 ${theme.msg} 的細節看清楚。`,
+        `聽秋葉落下的聲音，心中點燃了一盞 ${theme.msg} 的小燈。`,
+        `無需喧囂，一字一句敲下的都是關於 ${theme.msg} 的記憶。`,
+        `看天上的雲捲雲舒，心裡也跟著 ${theme.msg} 了起來。`,
+        `把今天的繁忙摺疊起來，放進名為 ${theme.msg} 的抽屜裡。`,
+        `最深沉的幸福，往往藏在這種 ${theme.msg} 的無事日裡。`,
+
+        // 81-90: 言語/認知復原維度
+        `🗣️ 樂活大聲讀：試著把這句「${theme.msg}」流暢讀出來吧！`,
+        `跟著吉祥物一起深呼吸，用最清晰的聲音說出：${theme.msg}。`,
+        `每天進步一點點，大聲朗讀手記，大腦正在健康地 ${theme.msg}。`,
+        `看著鏡頭裡的自己，大聲宣告：今天我很適合 ${theme.msg}！`,
+        `用手指輕點畫面，順便動動口舌，一起大聲唸：${theme.msg}！`,
+        `動動腦，動動口，用最生鬼的語調朗誦：${theme.msg}。`,
+        `語音校正辨識準備中！請預備好用宏亮的聲音讀出 ${theme.msg}。`,
+        `每一次的發音與記錄，都是通往 ${theme.msg} 的快樂復健。`,
+        `把今天的幸福碎片，化作口中那句驕傲的：${theme.msg}。`,
+        `用聲音留下足跡，讓全家人都聽見你正在 ${theme.msg}。`,
+
+        // 91-100: 未來期許維度
+        `睡前對自己許個願：願明天的太陽依然溫暖，依然 ${theme.msg}。`,
+        `未來的日子還很長，我們要一起生鬼地走過、保持 ${theme.msg}。`,
+        `把期盼寫在今天，願下一季的 LohasVLG 依然記錄著 ${theme.msg}。`,
+        `不管明天風雨多大，今晚先安心地躺在 ${theme.msg} 的搖籃裡。`,
+        `新的一天即將翻頁，而我已經做好了繼續 ${theme.msg} 的準備。`,
+        `願你心中有光，口袋有晶片，嘴角永遠掛著 ${theme.msg} 的笑。`,
+        `在記憶的畫布上，我們用 ${theme.msg} 的線條勾勒明天。`,
+        `期待下一次相機亮起時，能捕捉到你更加 ${theme.msg} 的神采。
+`,
+        `樂活金掌家的核心憲法：無論如何，都要快樂地 ${theme.msg}！`,
+        `點擊日記生成的那一刻，就是全新旅程的起點，讓我們 ${theme.msg}！`
     ];
     return templates[Math.floor(Math.random()*templates.length)];
 }
@@ -1111,10 +1236,14 @@ const App = {
     isFlashOn: false,
     facingMode: 'user', 
     activeTimer: null,
-    countdownDuration: 3, 
+    
+    countdownDuration: 0, 
+
+    videoRecordElapsedTime: 0,
+    videoRecordInterval: null,
 
     vlogGenerated: false,
-    selectedTarget: 'vlog', // 追蹤被選擇的目的地通道
+    selectedTarget: 'vlog',
 
     async init(){
         await this.startCamera();
@@ -1125,6 +1254,7 @@ const App = {
         this.switchCameraMode('photo'); 
         this.initVlogCardTextMode();
         this.bindActionButtons();
+        this.initToolbarSocialShare();
     },
 
     async startCamera() {
@@ -1150,27 +1280,43 @@ const App = {
             e.stopPropagation();
             this.isFlashOn = !this.isFlashOn;
             flashBtn.classList.toggle('flash-on', this.isFlashOn);
-            console.log("⚡ 實體閃光燈狀態已變更為：" + (this.isFlashOn ? "開啟" : "關閉"));
         });
 
         document.getElementById('cam-facing-toggle').addEventListener('click', async (e) => {
             e.stopPropagation();
             this.facingMode = (this.facingMode === 'user') ? 'environment' : 'user';
-            console.log("🔄 正在切換鏡頭模式至：" + this.facingMode);
             await this.startCamera();
         });
 
         document.getElementById('cam-timer-toggle').addEventListener('click', (e) => {
             e.stopPropagation();
-            if (this.countdownDuration === 3) {
+            if (this.cameraMode === 'video') {
+                alert("📹 錄影模式下計時器功能不適用。");
+                return;
+            }
+
+            if (this.countdownDuration === 0) {
+                this.countdownDuration = 3;
+            } else if (this.countdownDuration === 3) {
                 this.countdownDuration = 5;
             } else if (this.countdownDuration === 5) {
                 this.countdownDuration = 10;
             } else {
-                this.countdownDuration = 3;
+                this.countdownDuration = 0;
             }
-            document.getElementById('cam-live-countdown').innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
-            alert(`⏱️ 延時拍照倒數時間已設定為：${this.countdownDuration} 秒`);
+    
+            const countdownDisplay = document.getElementById('cam-live-countdown');
+            const tagText = document.getElementById('lohas-tag-text');
+
+            if (this.countdownDuration === 0) {
+                countdownDisplay.innerText = "00:00";
+                tagText.innerText = "📷 鏡頭就緒 (即時拍攝模式)";
+                alert("⏱️ 延時拍攝已關閉，切換為【即時拍照】模式。");
+            } else {
+                countdownDisplay.innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+                tagText.innerText = `📷 倒計時拍攝中 (${this.countdownDuration} 秒)`;
+                alert(`⏱️ 延時拍照已開啟，倒計時時間已設定為：${this.countdownDuration} 秒。`);
+            }
         });
     },
 
@@ -1190,9 +1336,34 @@ const App = {
         });
     },
 
+    initToolbarSocialShare() {
+        const toolbar = document.querySelector('.share-eat-toolbar');
+        const avatarBtn = document.getElementById('toolbar-avatar-trigger');
+        const cameraBtn = document.getElementById('toolbar-camera-trigger');
+
+        const openSharePanel = (e) => {
+            e.stopPropagation();
+            document.getElementById('captured-image-view').src = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500";
+            
+            const now = new Date();
+            document.getElementById('editor-live-time').innerText = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('editor-note-field').value = '';
+            document.getElementById('photo-preview-box').style.display = 'flex';
+        };
+
+        toolbar.addEventListener('click', openSharePanel);
+        if(avatarBtn) avatarBtn.addEventListener('click', openSharePanel);
+
+        if(cameraBtn) {
+            cameraBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.trigger();
+            });
+        }
+    },
+
     initVlogCardTextMode() {
         const vlogCard = document.querySelector('.vlog-info-card');
-        
         vlogCard.addEventListener('click', (e) => {
             if (this.vlogGenerated) {
                 const inlineVideo = document.getElementById('inline-vlog-player');
@@ -1231,7 +1402,7 @@ const App = {
                     } else {
                         vlogDesc.innerHTML = `這是你的專屬空間，每一天從凌晨 4 點到隔天凌晨 4 點。`;
                     }
-                    alert("✨ 文字日誌儲存成功！");
+                    alert("✨ 文字日誌儲存成功！已就地發布貼文。");
                 });
                 
                 document.getElementById('vlog-note-input').focus();
@@ -1244,12 +1415,15 @@ const App = {
         this.cameraMode = mode;
         document.getElementById('mode-photo').classList.toggle('active', mode === 'photo');
         document.getElementById('mode-video').classList.toggle('active', mode === 'video');
-        
         const tagText = document.getElementById('lohas-tag-text');
         const startBtn = document.getElementById('vlg-start-btn');
         
         if(mode === 'photo') {
-            tagText.innerText = "📷 鏡頭就緒 (拍攝照片模式)";
+            if (this.countdownDuration === 0) {
+                tagText.innerText = "📷 鏡頭就緒 (即時拍攝模式)";
+            } else {
+                tagText.innerText = `📷 倒計時拍攝中 (${this.countdownDuration} 秒)`;
+            }
             startBtn.innerText = "📸 拍攝"; 
             startBtn.className = "mode-shutter-active"; 
         } else {
@@ -1276,11 +1450,16 @@ const App = {
         const landVideo = document.getElementById('landscape-video-render');
         if(this.stream) landVideo.srcObject = this.stream;
         
+        const countdownDisplay = document.getElementById('cam-live-countdown');
         if(this.cameraMode === 'photo') {
-            document.getElementById('cam-live-countdown').innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+            if (this.countdownDuration === 0) {
+                countdownDisplay.innerText = "00:00";
+            } else {
+                countdownDisplay.innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+            }
             document.getElementById('cam-shutter-icon').innerText = "📸";
         } else {
-            document.getElementById('cam-live-countdown').innerText = "14:00";
+            countdownDisplay.innerText = "00:00";
             document.getElementById('cam-shutter-icon').innerText = "😊";
         }
 
@@ -1288,20 +1467,27 @@ const App = {
     },
 
     executeShutterAction() {
-        let timeLeft = this.countdownDuration;
         const countdownDisplay = document.getElementById('cam-live-countdown');
+        const tagText = document.getElementById('lohas-tag-text');
 
         if(this.cameraMode === 'photo') {
-            clearInterval(this.activeTimer);
-            this.activeTimer = setInterval(() => {
-                timeLeft--;
-                countdownDisplay.innerText = "00:" + String(timeLeft).padStart(2, '0');
-                
-                if (timeLeft <= 0) {
-                    clearInterval(this.activeTimer);
-                    this.performFinalCapture(); 
-                }
-            }, 1000);
+            if (this.countdownDuration === 0) {
+                this.performFinalCapture();
+            } 
+            else {
+                let timeLeft = this.countdownDuration;
+                clearInterval(this.activeTimer);
+                this.activeTimer = setInterval(() => {
+                    timeLeft--;
+                    countdownDisplay.innerText = "00:" + String(timeLeft).padStart(2, '0');
+                    tagText.innerText = `📷 倒計時拍攝中 (${timeLeft} 秒)`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(this.activeTimer);
+                        this.performFinalCapture(); 
+                    }
+                }, 1000);
+            }
         } else {
             this.performFinalCapture();
         }
@@ -1317,6 +1503,8 @@ const App = {
         
         document.getElementById("vlg-status-text").innerText = t.msg;
         document.getElementById("vlg-video-player").style.filter = t.filter;
+        
+        // ✨ 調用全新升級的 100 種隨機語句模版庫
         document.getElementById("ai-text").innerText = generateAIText(t);
     },
 
@@ -1329,7 +1517,6 @@ const App = {
 
         this.changeRandomThemeAndMascot();
         this.closeFullOverlay('overlay-landscape-camera');
-
         if(this.cameraMode === 'photo') {
             this.executePhotoCapture();
         } else {
@@ -1341,21 +1528,17 @@ const App = {
         const opts = element.parentNode.querySelectorAll('.zoom-opt');
         opts.forEach(o => o.classList.remove('active'));
         element.classList.add('active');
-        console.log("當前鏡頭焦距縮放倍率已設為：" + scale);
     },
 
-    // 📸 拍照擷取成功：載入當前系統即時時間戳記，並開啟傳送列表選單
     executePhotoCapture() {
         const video = document.getElementById('vlg-video-player');
         const canvas = document.getElementById('photo-capture-canvas');
         const ctx = canvas.getContext('2d');
         
-        // 🕒 自動取得當前精確時間
         const now = new Date();
         const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
         document.getElementById('editor-live-time').innerText = timeString;
-        document.getElementById('editor-note-field').value = ''; 
-
+        document.getElementById('editor-note-field').value = '';
         try {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob((blob) => {
@@ -1365,13 +1548,11 @@ const App = {
                 document.getElementById('photo-preview-box').style.display = 'flex';
             }, 'image/jpeg');
         } catch(e) {
-            // 虛擬測試圖像快取
-            document.getElementById('captured-image-view').src = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500";
+            document.getElementById('captured-image-view').src = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500";
             document.getElementById('photo-preview-box').style.display = 'flex';
         }
     },
 
-    // 傳送目標列表點選高亮切換狀態維護
     toggleDestRow(row, targetKey) {
         const rows = document.querySelectorAll('.destination-row');
         rows.forEach(r => r.classList.remove('active-dest'));
@@ -1380,10 +1561,9 @@ const App = {
     },
 
     closePhotoPreview() { 
-        document.getElementById('photo-preview-box').style.display = 'none'; 
+        document.getElementById('photo-preview-box').style.display = 'none';
     },
 
-    // ⚡ 核心實裝功能：點擊 ➔ 符號，儲存並「真正」依照選擇的列表通道分流發布出去！
     submitPhotoShare() {
         const noteText = document.getElementById('editor-note-field').value.trim();
         const timeTag = document.getElementById('editor-live-time').innerText;
@@ -1393,12 +1573,9 @@ const App = {
             this.clips.push(this.tempPhotoBlob);
         }
 
-        // 晶片計數遞增更新
         this.count++;
         document.getElementById("vlg-count").innerText = this.count;
         this.closePhotoPreview();
-
-        // ➔ 核心實體儲存分流：如果是儲存到 Vlog 日誌通道，真正將帶有時間標籤的照片直接渲染在卡片內！
         if (this.selectedTarget === 'vlog') {
             const vlogCard = document.querySelector('.vlog-info-card');
             const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
@@ -1406,27 +1583,29 @@ const App = {
             
             if (vlogDesc) {
                 vlogDesc.innerHTML = `
-                    <div style="position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
-                        <img src="${imageUrl}" style="width: 100%; display: block; filter: contrast(1.1);">
+                    <div style="position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                        <img src="${imageUrl}" style="width: 100%; display: block;">
                         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.8rem; font-weight: bold; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); font-family: monospace;">${timeTag}</div>
                     </div>
-                    <div style="font-size: 0.85rem; color: #fff; margin-top: 6px; line-height: 1.3;">📝 ${noteText || '已安全記下今日這刻的碎片！'}</div>
+                    <div style="font-size: 0.85rem; color: #fff; margin-top: 6px; line-height: 1.3;">📝 ${noteText || '已安全記下今日這刻的碎片貼文！'}</div>
                 `;
             }
             if (starIcon) starIcon.innerText = "📸";
-            alert(`✨ 儲存發布成功！\n相片已真正記錄並嵌入到你的主畫面【Vlog日誌】專屬卡片空間！`);
+            alert(`✨ 儲存成功！\n貼文相片已實體嵌入主畫面【Vlog日誌】專屬卡片空間！`);
         } 
         else if (this.selectedTarget === 'morning') {
-            alert(`✨ 分享成功！\n已成功將這張印有 [${timeTag}] 的早安相片與留言傳送至死黨群組的【早晨空間】☕！`);
+            alert(`✨ 發布成功！\n已將帶有 [${timeTag}] 的早安相片與心情日誌分享至【早晨群組空間】☕！`);
         } 
         else if (this.selectedTarget === 'share-eat') {
-            alert(`✨ 分享成功！\n美酒佳餚已上桌！相片已實體同步發布至【Share with eat共享佳餚美酒】🍷 社交空間！`);
+            alert(`✨ 共享成功！\n佳餚美酒相片與留言已實體同步發布至【Share with eat共享佳餚美酒】社交圈🍷！`);
         }
 
         this.checkProgress();
     },
 
     executeVideoRecording() {
+        const countdownDisplay = document.getElementById('cam-live-countdown');
+        
         if(!this.isRecording) {
             this.isRecording = true;
             this.chunks = [];
@@ -1434,6 +1613,17 @@ const App = {
             document.getElementById('vlg-start-btn').className = "mode-video-active"; 
             document.getElementById('lohas-status-dot').classList.add('recording');
             document.getElementById('lohas-tag-text').innerText = "🔴 正在錄製影片中...";
+            
+            this.videoRecordElapsedTime = 0;
+            countdownDisplay.innerText = "00:00";
+            clearInterval(this.videoRecordInterval);
+            this.videoRecordInterval = setInterval(() => {
+                this.videoRecordElapsedTime++;
+                let mins = String(Math.floor(this.videoRecordElapsedTime / 60)).padStart(2, '0');
+                let secs = String(this.videoRecordElapsedTime % 60).padStart(2, '0');
+                countdownDisplay.innerText = `${mins}:${secs}`;
+            }, 1000);
+
             if(this.stream) {
                 this.recorder = new MediaRecorder(this.stream);
                 this.recorder.ondataavailable = e => this.chunks.push(e.data);
@@ -1452,6 +1642,7 @@ const App = {
         } else {
             this.isRecording = false;
             clearTimeout(this.recordTimeout);
+            clearInterval(this.videoRecordInterval);
             
             this.switchCameraMode(this.cameraMode);
             
@@ -1484,7 +1675,6 @@ const App = {
         }
         const final = new Blob(this.clips, {type: "video/webm"});
         const url = URL.createObjectURL(final);
-        
         this.vlogGenerated = true;
 
         const v = document.getElementById("vlg-video-player");
@@ -1492,14 +1682,12 @@ const App = {
         v.src = url;
         v.controls = true;
         document.getElementById("vlg-status-text").innerText = "🎬 完成!";
-        
         const logPlayer = document.getElementById("log-output-player");
         logPlayer.src = url;
         
         const vlogCard = document.querySelector('.vlog-info-card');
         const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
         const starIcon = vlogCard.querySelector('.star-bubble-icon');
-        
         if (vlogDesc) {
             vlogDesc.innerHTML = `
                 <video id="inline-vlog-player" src="${url}" controls poster="" 
@@ -1512,7 +1700,6 @@ const App = {
         }
         
         document.getElementById("overlay-view-log").style.display = "flex";
-        
         document.getElementById('lohas-bell-badge').style.display = 'block';
         document.getElementById('noti-content').innerHTML = `🎉 成功解鎖！今天的每日手記已生成，已自動分享同步給你的死黨！`;
     },
@@ -1534,6 +1721,7 @@ const App = {
         document.getElementById('back-to-main-1').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
         document.getElementById('back-to-main-2').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
         document.getElementById('back-to-main-3').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
+        document.documentElement.style.setProperty('--accent-pink', '#FF64C8');
         document.getElementById('sub-item-change-color').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-colors').style.display = 'block'; });
         document.getElementById('back-to-profile').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-profile').style.display = 'block'; });
         
@@ -1544,6 +1732,7 @@ const App = {
                 colorOpts.forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
                 const selectedColor = opt.getAttribute('data-color');
+              
                 document.documentElement.style.setProperty('--accent-pink', selectedColor);
                 document.getElementById('vlg-video-player').style.borderColor = selectedColor;
             });
@@ -1557,6 +1746,7 @@ const App = {
                 document.getElementById('log-user-name-tag').innerText = newName;
                 document.getElementById('log-user-avatar-tag').innerText = newName.charAt(0);
             }
+ 
             document.getElementById('name-modal-overlay').style.display = 'none'; 
         });
         document.addEventListener('click', () => closeAllPops());
@@ -1568,7 +1758,6 @@ const App = {
             this.changeRandomThemeAndMascot();
             console.log("💡 吉祥物公仔與樂活主題已成功隨機轉換！");
         });
-        
         document.getElementById('mascot-right-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             this.trigger(); 
@@ -1585,6 +1774,10 @@ const App = {
         document.getElementById(id).style.display = 'none';
         if(id === 'overlay-view-log') {
             document.getElementById('log-output-player').pause();
+        }
+        if(id === 'overlay-landscape-camera') {
+            clearInterval(this.videoRecordInterval); 
+            this.switchCameraMode(this.cameraMode);
         }
     },
 
