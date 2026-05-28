@@ -335,7 +335,7 @@ button {
     transition: all 0.3s ease;
 }
 
-/* 📸 模式 A：拍攝狀態下的雷達呼吸發光圈樣式 */
+/* 📸 拍攝模式：雷達呼吸發光圈樣式 */
 .mode-shutter-active { 
     background: #fff !important; 
     color: #000 !important; 
@@ -348,7 +348,7 @@ button {
     100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
 }
 
-/* 📹 模式 B：錄影狀態下的雷達紅光呼吸發光圈樣式 */
+/* 📹 錄影模式：雷達紅光呼吸發光圈樣式 */
 .mode-video-active {
     background: #2D2D2D !important;
     color: #fff !important;
@@ -361,7 +361,7 @@ button {
     100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
 }
 
-/* 📖 日記本生動搖擺動畫 */
+/* 📖 日記按鈕持續維持左右微幅擺動動畫 */
 .book-wiggle-effect { 
     background: #2D2D2D !important; 
     color: #fff !important; 
@@ -652,8 +652,130 @@ button {
 .modal-btn.cancel { background: #2C2C30; color: #fff; }
 .modal-btn.save { background: var(--accent-pink); color: #fff; }
 
-.photo-preview-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 250; border-radius: 40px; display: none; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-#captured-image-view { max-width: 100%; max-height: 65%; border-radius: 22px; border: 3px solid #fff; object-fit: contain; }
+/* 📸 核心優化：100% 復刻手記拍攝後的貼圖、即時時間、Emoji 與多目標分享選單 */
+.photo-preview-overlay { 
+    position: absolute; 
+    top: 0; left: 0; right: 0; bottom: 0; 
+    background: #000000;
+    z-index: 250; 
+    border-radius: 40px; 
+    display: none; 
+    flex-direction: column; 
+    padding: 20px; 
+    box-sizing: border-box; 
+    overflow-y: auto;
+}
+.preview-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 12px;
+}
+.preview-back-btn {
+    background: transparent; border: none; color: #fff; font-size: 1.4rem; cursor: pointer;
+}
+.preview-upload-btn {
+    background: rgba(255,255,255,0.12); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.1rem;
+}
+.editor-image-container {
+    position: relative;
+    width: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #111;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    margin-bottom: 15px;
+}
+#captured-image-view { 
+    width: 100%; 
+    max-height: 200px; 
+    object-fit: cover; 
+    display: block; 
+}
+/* 📌 照片正中央即時時間浮層 */
+.editor-time-stamp {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.75);
+    pointer-events: none;
+    font-family: 'Courier New', Courier, monospace;
+}
+/* ✍️ 寫 text 方塊與表情貼圖區域 */
+.editor-input-area {
+    width: 100%;
+    background: #111112;
+    border-radius: 20px;
+    padding: 12px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.editor-text-field {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    resize: none;
+    height: 44px;
+    font-family: inherit;
+}
+.editor-text-field::placeholder { color: #555; }
+
+/* 📤 傳送目的地選單列表 */
+.share-destination-panel {
+    width: 100%;
+    text-align: left;
+}
+.share-heading {
+    font-size: 0.9rem;
+    color: #8E8E93;
+    margin-bottom: 8px;
+    padding-left: 4px;
+}
+.destination-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.destination-row {
+    background: #1C1C1E;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.destination-row:hover { background: #2C2C2E; }
+.dest-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.dest-circle-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #555;
+    box-sizing: border-box;
+}
+.destination-row.active-dest .dest-circle-icon {
+    background: var(--accent-pink);
+    border-color: var(--accent-pink);
+    box-shadow: 0 0 8px var(--accent-pink);
+}
+.dest-name { font-size: 1rem; font-weight: 500; color: #fff; }
+.dest-emoji { font-size: 1.2rem; }
 
 /* 📱 響應式網頁設計 (RWD) */
 body { 
@@ -866,7 +988,7 @@ body {
 
     <div class="vlog-info-card">
         <span class="vlog-card-title">Vlog日誌</span>
-        <p class="vlog-card-desc">這是你的專屬空間，每一天從凌晨 4 點到隔天凌晨 4 點。</p>
+        <p class="vlog-card-desc">這是你的專專空間，每一天從凌晨 4 點到隔天凌晨 4 點。</p>
         <div class="star-bubble-icon">⭐</div>
     </div>
 
@@ -904,11 +1026,45 @@ body {
     </div>
 
     <div class="photo-preview-overlay" id="photo-preview-box">
-        <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 15px;">📸 樂活碎片照片已捕獲！</div>
-        <img id="captured-image-view" src="" alt="Captured Image">
-        <div style="display:flex; gap:15px; width:100%; margin-top:20px;">
-            <button style="background:#2D2D2D; color:#fff; padding:12px; border-radius:20px; font-weight:bold; flex:1; border:none; cursor:pointer;" onclick="App.closePhotoPreview()">重新拍攝</button>
-            <button style="background:var(--accent-pink); color:#fff; padding:12px; border-radius:20px; font-weight:bold; flex:1; border:none; cursor:pointer;" onclick="App.savePhotoToClips()">確認保留</button>
+        <div class="preview-header-bar">
+            <button class="preview-back-btn" onclick="App.closePhotoPreview()">✕</button>
+            <button class="preview-upload-btn" onclick="App.submitPhotoShare()">➔</button>
+        </div>
+        
+        <div class="editor-image-container">
+            <img id="captured-image-view" src="" alt="Captured Image">
+            <div class="editor-time-stamp" id="editor-live-time">09:00</div>
+        </div>
+
+        <div class="editor-input-area">
+            <textarea class="editor-text-field" id="editor-note-field" placeholder="點擊這裡加入你想說的文字或 Emoji ✨..."></textarea>
+        </div>
+
+        <div class="share-destination-panel">
+            <div class="share-heading">傳送到：</div>
+            <div class="destination-list">
+                <div class="destination-row active-dest" onclick="App.toggleDestRow(this, 'vlog')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">vlog</div>
+                    </div>
+                    <div class="dest-emoji">😊</div>
+                </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'morning')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">早晨</div>
+                    </div>
+                    <div class="dest-emoji">☕</div>
+                </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'share-eat')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">Share with eat</div>
+                    </div>
+                    <div class="dest-emoji">🍷</div>
+                </div>
+            </div>
         </div>
     </div>
 </main>
@@ -960,6 +1116,7 @@ const App = {
     countdownDuration: 3, 
 
     vlogGenerated: false,
+    selectedTarget: 'vlog', // 預設傳送分享對象
 
     async init(){
         await this.startCamera();
@@ -967,9 +1124,9 @@ const App = {
         this.initMascotButtons(); 
         this.initHardwareButtons(); 
         this.simulateIncomingNotification();
-        this.switchCameraMode('photo'); // 強制初始化正確樣式字樣
+        this.switchCameraMode('photo'); 
         this.initVlogCardTextMode();
-        this.bindActionButtons(); // ⚡ 綁定修復按鈕的主操作事件
+        this.bindActionButtons();
     },
 
     async startCamera() {
@@ -1019,22 +1176,19 @@ const App = {
         });
     },
 
-    // ⚡ 實裝修復：為實體按鈕 ID 獨立綁定點擊邏輯，避免動畫 Class 覆蓋導致失聯
     bindActionButtons() {
-        // 1. 快門拍攝鍵
         document.getElementById('vlg-start-btn').addEventListener('click', (e) => {
             e.stopPropagation();
             if(this.cameraMode === 'photo') {
-                this.trigger(); // 喚醒相機
+                this.trigger(); 
             } else {
-                this.executeVideoRecording(); // 執行錄影切換
+                this.executeVideoRecording(); 
             }
         });
 
-        // 2. 日記解鎖生成鍵
         document.getElementById('vlg-generate-btn').addEventListener('click', (e) => {
             e.stopPropagation();
-            this.generate(); // 執行影片與日記生成功能
+            this.generate(); 
         });
     },
 
@@ -1087,7 +1241,6 @@ const App = {
         });
     },
 
-    // ⚡ 狀態機精準刷新：確保在任何模式轉換下，100% 刷新成精簡字樣
     switchCameraMode(mode) {
         if(this.isRecording) return;
         this.cameraMode = mode;
@@ -1193,32 +1346,65 @@ const App = {
         console.log("當前鏡頭焦距縮放倍率已設為：" + scale);
     },
 
+    // ⚡ 實裝：拍照後載入當前真實時間，並開啟附圖同款的編輯與多功能傳送選單
     executePhotoCapture() {
         const video = document.getElementById('vlg-video-player');
         const canvas = document.getElementById('photo-capture-canvas');
         const ctx = canvas.getContext('2d');
+        
+        // 🕒 獲取當前即時系統時間 (格式: 09:00)
+        const now = new Date();
+        const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('editor-live-time').innerText = timeString;
+        document.getElementById('editor-note-field').value = ''; // 清空欄位預備
+
         try {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob((blob) => {
                 this.tempPhotoBlob = blob;
                 const url = URL.createObjectURL(blob);
                 document.getElementById('captured-image-view').src = url;
+                // 喚起全新照片編輯傳送共享面板
                 document.getElementById('photo-preview-box').style.display = 'flex';
             }, 'image/jpeg');
         } catch(e) {
-            alert("✨ 模擬拍照成功！已捕獲橫向樂活碎片照片。");
-            this.count++;
-            document.getElementById("vlg-count").innerText = this.count;
-            this.checkProgress();
+            // 虛擬環境防呆模擬
+            document.getElementById('captured-image-view').src = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500";
+            document.getElementById('photo-preview-box').style.display = 'flex';
         }
     },
-    closePhotoPreview() { document.getElementById('photo-preview-box').style.display = 'none'; },
-    savePhotoToClips() {
+
+    // 選擇分享目的地列表切換
+    toggleDestRow(row, targetKey) {
+        const rows = document.querySelectorAll('.destination-row');
+        rows.forEach(r => r.classList.remove('active-dest'));
+        row.classList.add('active-dest');
+        this.selectedTarget = targetKey;
+    },
+
+    // 關閉拍照預覽面層
+    closePhotoPreview() { 
+        document.getElementById('photo-preview-box').style.display = 'none'; 
+    },
+
+    // ⚡ 按下 ➔ 符號執行發布與跨對象模擬分享
+    submitPhotoShare() {
         if(this.tempPhotoBlob) this.clips.push(this.tempPhotoBlob);
+        
+        const noteText = document.getElementById('editor-note-field').value.trim();
+        const timeTag = document.getElementById('editor-live-time').innerText;
+        
         this.count++;
         document.getElementById("vlg-count").innerText = this.count;
         this.closePhotoPreview();
         this.checkProgress();
+
+        // 依據選擇的傳送通道彈出生動的回饋
+        let targetName = "Vlog日誌";
+        if (this.selectedTarget === 'morning') targetName = "早晨空間";
+        if (this.selectedTarget === 'share-eat') targetName = "Share with eat共享佳餚美酒";
+
+        alert(`🚀 樂活碎片分享成功！\n已將印有 [${timeTag}] 的貼圖相片及留言「${noteText || '無'}」成功同步發布至：【${targetName}】！`);
     },
 
     executeVideoRecording() {
@@ -1226,7 +1412,7 @@ const App = {
             this.isRecording = true;
             this.chunks = [];
             document.getElementById('vlg-start-btn').innerText = "🛑 停止"; 
-            document.getElementById('vlg-start-btn').className = "mode-video-active"; // 錄影中換成極速紅閃光圈
+            document.getElementById('vlg-start-btn').className = "mode-video-active"; 
             document.getElementById('lohas-status-dot').classList.add('recording');
             document.getElementById('lohas-tag-text').innerText = "🔴 正在錄製影片中...";
             if(this.stream) {
@@ -1248,7 +1434,6 @@ const App = {
             this.isRecording = false;
             clearTimeout(this.recordTimeout);
             
-            // 🛑 重大修復點：回彈時強制回歸狀態機刷新
             this.switchCameraMode(this.cameraMode);
             
             document.getElementById('lohas-status-dot').classList.remove('recording');
@@ -1273,7 +1458,6 @@ const App = {
         alert("✨ [言語治療/認知訓練模組]\n正在調用 Web Speech API 進行語音校正辨識與手記字幕編輯...");
     },
 
-    // 🎬 核心功能：解鎖影片並動態渲染至主網頁的「Vlog日誌」卡片中
     generate(){
         if(this.count < 3){
             alert("請先收集 3 段樂活晶片碎片才可以生成日記喔！");
