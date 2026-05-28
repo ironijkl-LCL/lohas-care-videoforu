@@ -1078,21 +1078,132 @@ body {
 <canvas id="photo-capture-canvas" style="display:none;" width="640" height="480"></canvas>
 
 <script>
+// 🌟 核心重大升級：全面擴充 100 種不同主題、吉祥物公仔與專業相機濾鏡的陣列庫 (10大系列 × 10變體)
 const themes = [
+    // 系列 1：樂活陸地萌寵系 (1-10)
     { bg:'#FF9A9E', icon:'🐢', msg:'慢慢走也很好', filter:'sepia(0.3)' },
-    { bg:'#A1C4FD', icon:'🐬', msg:'跳進自由感', filter:'contrast(1.2)' },
-    { bg:'#FFD1FF', icon:'🦄', msg:'夢幻一下', filter:'brightness(1.2)' },
-    { bg:'#FFF3B0', icon:'🌞', msg:'陽光正好', filter:'saturate(1.4)' },
-    { bg:'#C1FBA4', icon:'🌿', msg:'呼吸自然', filter:'hue-rotate(20deg)' },
-    { bg:'#FEC8D8', icon:'🐰', msg:'溫溫柔柔', filter:'contrast(1.1)' },
-    { bg:'#B5EAD7', icon:'🐳', msg:'像海一樣靜', filter:'blur(1px)' },
-    { bg:'#C7CEEA', icon:'🌙', msg:'夜晚也美', filter:'brightness(0.8)' },
-    { bg:'#FFDAC1', icon:'☕', msg:'屬於你的時光', filter:'sepia(0.5)' },
-    { bg:'#FFB7B2', icon:'🍓', msg:'微甜日', filter:'saturate(1.6)' }
+    { bg:'#FEC8D8', icon:'🐰', msg:'溫溫柔柔過日子', filter:'contrast(1.1)' },
+    { bg:'#FFB7B2', icon:'🍓', msg:'生活帶點微甜', filter:'saturate(1.6)' },
+    { bg:'#FFDAC1', icon:'🐱', msg:'像貓咪一樣愜意', filter:'sepia(0.2) brightness(1.1)' },
+    { bg:'#FFE5EC', icon:'🐶', msg:'保持滿滿的熱情', filter:'contrast(1.05)' },
+    { bg:'#F3I1I2', icon:'🦊', msg:'機靈面對新挑戰', filter:'hue-rotate(10deg)' },
+    { bg:'#FFE3E3', icon:'🐹', msg:'知足享受小確幸', filter:'saturate(1.2)' },
+    { bg:'#FFF0F5', icon:'🐼', msg:'生活步調平穩安泰', filter:'grayscale(0.1)' },
+    { bg:'#FCE4EC', icon:'🐨', msg:'安穩沉穩抱緊幸福', filter:'sepia(0.15)' },
+    { bg:'#FFDEE9', icon:'🦁', msg:'心中自有大無畏', filter:'brightness(1.05) contrast(1.15)' },
+
+    // 系列 2：深海悠遊家族 (11-20)
+    { bg:'#A1C4FD', icon:'🐬', msg:'跳進自由的藍海', filter:'contrast(1.2)' },
+    { bg:'#B5EAD7', icon:'🐳', msg:'心寬如海海納百川', filter:'blur(0.2px)' },
+    { bg:'#93I1A2', icon:'🐠', msg:'色彩斑斕綻放光采', filter:'saturate(1.8)' },
+    { bg:'#E0F7FA', icon:'🐙', msg:'靈活適應萬事通', filter:'hue-rotate(180deg)' },
+    { bg:'#B2EBF2', icon:'🐧', msg:'腳踏實地勇敢前行', filter:'contrast(1.25)' },
+    { bg:'#80DEEA', icon:'🦭', msg:'放鬆身心享受自在', filter:'brightness(0.95)' },
+    { bg:'#4DD0E1', icon:'🦈', msg:'乘風破浪無所畏懼', filter:'contrast(1.3)' },
+    { bg:'#00ACC1', icon:'🐳', msg:'傾聽內心深處的聲音', filter:'hue-rotate(200deg)' },
+    { bg:'#00838F', icon:'🐢', msg:'源遠流長智慧長青', filter:'sepia(0.4) contrast(1.1)' },
+    { bg:'#006064', icon:'🐚', msg:'珍藏歲月的珍珠', filter:'brightness(0.85) saturate(1.3)' },
+
+    // 系列 3：大自然綠意呼吸 (21-30)
+    { bg:'#C1FBA4', icon:'🌿', msg:'深呼吸感受大自然', filter:'hue-rotate(20deg)' },
+    { bg:'#E8F5E9', icon:'🌲', msg:'如松柏般堅韌長青', filter:'contrast(1.1) saturate(1.2)' },
+    { bg:'#C8E6C9', icon:'🌱', msg:'每一天都是新生的開始', filter:'hue-rotate(15deg)' },
+    { bg:'#A5D6A7', icon:'☘️', msg:'幸運常伴你左右', filter:'saturate(1.3)' },
+    { bg:'#81C784', icon:'🍀', msg:'心中常開幸福之花', filter:'contrast(1.05)' },
+    { bg:'#66BB6A', icon:'🎋', msg:'虛心有節步步高升', filter:'hue-rotate(30deg)' },
+    { bg:'#4CAF50', icon:'🌴', msg:'享受燦爛陽光生活', filter:'brightness(1.1)' },
+    { bg:'#388E3C', icon:'🌾', msg:'飽滿謙遜收穫滿滿', filter:'sepia(0.25)' },
+    { bg:'#2E7D32', icon:'🌵', msg:'頑強堅韌傲視風霜', filter:'contrast(1.2)' },
+    { bg:'#1B5E20', icon:'🍁', msg:'歲月沉澱優雅從容', filter:'sepia(0.4) saturate(1.4)' },
+
+    // 系列 4：璀璨星空奇幻 (31-40)
+    { bg:'#C7CEEA', icon:'🌙', msg:'靜謐夜空心境如月', filter:'brightness(0.8)' },
+    { bg:'#E1BEE7', icon:'⭐', msg:'你就是最耀眼的星', filter:'brightness(1.25)' },
+    { bg:'#D1C4E9', icon:'🌌', msg:'胸懷浩瀚宇宙星辰', filter:'contrast(1.1) hue-rotate(-20deg)' },
+    { bg:'#B39DDB', icon:'🔮', msg:'心靈福至洞察未來', filter:'saturate(1.3)' },
+    { bg:'#9FA8DA', icon:'🌠', msg:'許下心中美好心願', filter:'brightness(1.15)' },
+    { bg:'#7986CB', icon:'🚀', msg:'夢想啟航飛向萬里', filter:'contrast(1.2)' },
+    { bg:'#5C6BC0', icon:'🛸', msg:'保持強烈的好奇心', filter:'hue-rotate(45deg)' },
+    { bg:'#3F51B5', icon:'🪐', msg:'井然有序沉穩運轉', filter:'brightness(0.9)' },
+    { bg:'#303F9F', icon:'☄️', msg:'劃破長空燃燒熱情', filter:'saturate(1.5)' },
+    { bg:'#1A237E', icon:'🎆', msg:'生命如煙火般絢爛', filter:'contrast(1.4) brightness(1.1)' },
+
+    // 系列 5：港式復古茶餐廳 (41-50)
+    { bg:'#FFF3B0', icon:'🌞', msg:'暖陽高照朝氣蓬勃', filter:'saturate(1.4)' },
+    { bg:'#FFE082', icon:'☕', msg:'屬於你的絲襪奶茶時光', filter:'sepia(0.5)' },
+    { bg:'#FFD54F', icon:'🍋', msg:'笑口常開凍檸茶少甜', filter:'saturate(1.7) contrast(1.1)' },
+    { bg:'#FFCA28', icon:'🍍', msg:'生活新鮮酥皮菠蘿包', filter:'brightness(1.05)' },
+    { bg:'#FFB300', icon:'🍳', msg:'元氣滿滿太陽蛋', filter:'saturate(1.5)' },
+    { bg:'#FFA000', icon:'🧇', msg:'甜蜜蜜格仔餅風味', filter:'sepia(0.3)' },
+    { bg:'#FF8F00', icon:'🍞', msg:'厚多士分享厚情厚誼', filter:'sepia(0.2) contrast(1.05)' },
+    { bg:'#FF6F00', icon:'🧉', msg:'紅豆冰樂在其中', filter:'saturate(1.3)' },
+    { bg:'#F57C00', icon:'🍛', msg:'香濃咖哩香氣四溢', filter:'sepia(0.1) contrast(1.15)' },
+    { bg:'#E65100', icon:'🥮', msg:'人月兩團圓經典傳承', filter:'sepia(0.4) contrast(1.1)' },
+
+    // 系列 6：花漾春日綻放 (51-60)
+    { bg:'#FFF0F5', icon:'🌸', msg:'春暖花開好事發生', filter:'brightness(1.1) saturate(1.1)' },
+    { bg:'#FFB7C5', icon:'🌹', msg:'高雅芬芳活出精彩', filter:'contrast(1.1)' },
+    { bg:'#F48FB1', icon:'🌷', msg:'優雅大方氣質滿分', filter:'saturate(1.4)' },
+    { bg:'#F06292', icon:'🌻', msg:'永遠面向陽光生長', filter:'brightness(1.05) saturate(1.5)' },
+    { bg:'#EC407A', icon:'🌺', msg:'熱情奔放展現活力', filter:'hue-rotate(-10deg)' },
+    { bg:'#E91E63', icon:'💐', msg:'生活幸福繁花似錦', filter:'contrast(1.15)' },
+    { bg:'#D81B60', icon:'🏵️', msg:'圓滿和諧樂活自在', filter:'saturate(1.2)' },
+    { bg:'#C2185B', icon:'💮', msg:'心思細緻品味生活', filter:'brightness(0.95)' },
+    { bg:'#AD1457', icon:'🍁', msg:'秋意濃情收穫沉澱', filter:'sepia(0.35)' },
+    { bg:'#880E4F', icon:'🍇', msg:'碩果累累甜美豐收', filter:'contrast(1.2) hue-rotate(20deg)' },
+
+    // 系列 7：萬象海島度假 (61-70)
+    { bg:'#E0F2F1', icon:'🏝️', msg:'悠閒海島忘卻煩憂', filter:'brightness(1.05)' },
+    { bg:'#B2DFDB', icon:'🏖️', msg:'放鬆享受陽光沙灘', filter:'saturate(1.2)' },
+    { bg:'#80CBC4', icon:'⛵', msg:'揚帆遠航長風破浪', filter:'contrast(1.1)' },
+    { bg:'#4DB6AC', icon:'🌊', msg:'心潮澎湃活力無限', filter:'hue-rotate(160deg)' },
+    { bg:'#26A69A', icon:'🐬', msg:'與自由結伴同行', filter:'contrast(1.15)' },
+    { bg:'#009688', icon:'🐠', msg:'靈動自在無拘無束', filter:'saturate(1.5)' },
+    { bg:'#00897B', icon:'🦀', msg:'橫行無忌快樂至上', filter:'sepia(0.1)' },
+    { bg:'#00796B', icon:'🐚', msg:'聆聽大海智慧低語', filter:'brightness(0.9)' },
+    { bg:'#00695C', icon:'🌴', msg:'常青不老屹立不搖', filter:'hue-rotate(15deg) contrast(1.1)' },
+    { bg:'#004D40', icon:'🌅', msg:'夕陽無限好滿載歸', filter:'sepia(0.3) saturate(1.3)' },
+
+    // 系列 8：彩虹能量樂園 (71-80)
+    { bg:'#FFEB3B', icon:'🎈', msg:'心情放飛快樂飄揚', filter:'saturate(1.6)' },
+    { bg:'#FFF59D', icon:'🌈', msg:'風雨過後必有彩虹', filter:'brightness(1.1) saturate(1.4)' },
+    { bg:'#FFF176', icon:'🎡', msg:'幸福輪轉精彩不斷', filter:'contrast(1.05)' },
+    { bg:'#FFEE58', icon:'🎠', msg:'童心未泯青春常駐', filter:'sepia(0.1)' },
+    { bg:'#FDD835', icon:'🎪', msg:'生活處處有驚喜舞台', filter:'saturate(1.3)' },
+    { bg:'#FBC02D', icon:'🎨', msg:'親手繪製彩色人生', filter:'contrast(1.2) saturate(1.5)' },
+    { bg:'#F9A825', icon:'🎭', msg:'千面精彩活出自我', filter:'brightness(1.02)' },
+    { bg:'#F57F17', icon:'🍿', msg:'有滋有味看盡風雲', filter:'sepia(0.2)' },
+    { bg:'#FFF9C4', icon:'🎫', msg:'解鎖樂活美好入場券', filter:'brightness(1.15)' },
+    { bg:'#FFF59D', icon:'🧸', msg:'溫暖貼心伴你左右', filter:'contrast(1.1)' },
+
+    // 系列 9：東方祥瑞瑞獸 (81-90)
+    { bg:'#FFCDD2', icon:'🐉', msg:'龍馬精神生龍活虎', filter:'contrast(1.2) saturate(1.3)' },
+    { bg:'#EF9A9A', icon:'🦄', msg:'祥瑞降臨吉星高照', filter:'hue-rotate(-30deg)' },
+    { bg:'#E57373', icon:'🦅', msg:'大鵬展翅志在千里', filter:'contrast(1.15)' },
+    { bg:'#EF5350', icon:'🦚', msg:'吉祥如意大放異彩', filter:'saturate(1.6) hue-rotate(45deg)' },
+    { bg:'#F44336', icon:'鶴', msg:'松鶴延年福壽雙全', filter:'grayscale(0.05)' },
+    { bg:'#E53935', icon:'🦌', msg:'福祿雙全鹿鳴長青', filter:'sepia(0.2)' },
+    { bg:'#D32F2F', icon:'🐢', msg:'玄武安泰福壽綿長', filter:'sepia(0.4) contrast(1.1)' },
+    { bg:'#C62828', icon:'🐅', msg:'虎虎生威威風凜凜', filter:'contrast(1.25)' },
+    { bg:'#B71C1C', icon:'🏮', msg:'鴻運當頭張燈結彩', filter:'saturate(1.5) brightness(0.95)' },
+    { bg:'#FF8A80', icon:'🪙', msg:'富貴吉祥好運連連', filter:'brightness(1.1) saturate(1.4)' },
+
+    // 系列 10：璀璨晶鑽寶石 (91-100)
+    { bg:'#E1BEE7', icon:'💎', msg:'晶瑩剔透質地純潔', filter:'brightness(1.2) contrast(1.2)' },
+    { bg:'#CE93D8', icon:'🔮', msg:'靈氣逼人智慧通達', filter:'hue-rotate(15deg)' },
+    { bg:'#BA68C8', icon:'💍', msg:'承諾美好一生幸福', filter:'contrast(1.1)' },
+    { bg:'#AB47BC', icon:'👑', msg:'尊貴典雅傲視群雄', filter:'brightness(1.05) saturate(1.3)' },
+    { bg:'#9C27B0', icon:'👑', msg:'氣度不凡雍容華貴', filter:'contrast(1.15)' },
+    { bg:'#8E24AA', icon:'🔮', msg:'神祕高雅內涵深厚', filter:'hue-rotate(-15deg)' },
+    { bg:'#7B1FA2', icon:'🌟', msg:'光芒萬丈耀眼奪目', filter:'brightness(1.25) contrast(1.3)' },
+    { bg:'#6A1B9A', icon:'✨', msg:'奇蹟發生好運降臨', filter:'saturate(1.7)' },
+    { bg:'#4A148C', icon:'🪐', msg:'浩瀚沉穩厚積薄發', filter:'brightness(0.85)' },
+    { bg:'#D500F9', icon:'⚡', msg:'雷厲風行效率滿分', filter:'contrast(1.3) saturate(1.6)' }
 ];
+
 let currentIcon = '🐢';
 
-// 🌟 核心升級：實裝 100 種不同情感與語境維度的 AI 日記模版陣列庫
+// 🌟 100 種不同情感與語境維度的 AI 日記模版陣列庫
 function generateAIText(theme){
     const templates = [
         // 1-10: 日常覺察維度
@@ -1110,8 +1221,7 @@ function generateAIText(theme){
         // 11-20: 溫馨陪伴維度
         `不論世界有多忙碌，別忘了陪自己 ${theme.msg}。`,
         `老友，今天想邀請你和我一同 ${theme.msg} ☕`,
-        `給心靈充個電，現在最適合 ${theme.msg} 啦。
-`,
+        `給心靈充個電，現在最適合 ${theme.msg} 啦。`,
         `聽一首歌，喝一杯茶，感受 ${theme.msg} 的片刻。`,
         `生活不用每天都完美，只要能 ${theme.msg} 就很幸福。`,
         `今天的小確幸，莫過於能夠安全地 ${theme.msg}。`,
@@ -1134,8 +1244,7 @@ function generateAIText(theme){
 
         // 31-40: 樂活正念維度
         `✨ 正念呼吸：吸氣時感受安穩，呼氣時放鬆並 ${theme.msg}。`,
-        `專注於眼前的這一刻，允許自己全面 ${theme.msg}。
-`,
+        `專注於眼前的這一刻，允許自己全面 ${theme.msg}。`,
         `當心靜下來，你會發現 ${theme.msg} 是如此自然。`,
         `不為昨天遺憾，不為明天焦慮，當下的任務是 ${theme.msg}。`,
         `感覺一下自己的雙手與呼吸，試著讓身體 ${theme.msg}。`,
@@ -1176,7 +1285,7 @@ function generateAIText(theme){
         `今天的碎片貼文裡，滿滿都是我們期待 ${theme.msg} 的暗號。`,
         `不論距離多遠，只要看見這條日誌，就知道你在 ${theme.msg}。`,
         `共享佳餚美酒的同時，別忘了同步這份 ${theme.msg} 的心情。`,
-        `今天群組裡最生鬼的話題，一定是關於如何 ${theme.msg}。`,
+        `今天群組裡最生鬼話題，一定是關於如何 ${theme.msg}。`,
         `和在乎的人連線，把平淡的日常變成 ${theme.msg} 的派對。`,
         `一條溫暖的對話，能讓彼此在 ${theme.msg} 中找到共鳴。`,
         `點擊發布，這份 ${theme.msg} 正在實時傳遞給你的死黨。`,
@@ -1213,8 +1322,7 @@ function generateAIText(theme){
         `新的一天即將翻頁，而我已經做好了繼續 ${theme.msg} 的準備。`,
         `願你心中有光，口袋有晶片，嘴角永遠掛著 ${theme.msg} 的笑。`,
         `在記憶的畫布上，我們用 ${theme.msg} 的線條勾勒明天。`,
-        `期待下一次相機亮起時，能捕捉到你更加 ${theme.msg} 的神采。
-`,
+        `期待下一次相機亮起時，能捕捉到你更加 ${theme.msg} 的神采。`,
         `樂活金掌家的核心憲法：無論如何，都要快樂地 ${theme.msg}！`,
         `點擊日記生成的那一刻，就是全新旅程的起點，讓我們 ${theme.msg}！`
     ];
@@ -1494,6 +1602,7 @@ const App = {
     },
 
     changeRandomThemeAndMascot() {
+        // ✨ 從全新擴充的 100 種主題庫中隨機抽選一個
         const t = themes[Math.floor(Math.random() * themes.length)];
         document.body.style.background = t.bg;
         currentIcon = t.icon; 
@@ -1504,7 +1613,6 @@ const App = {
         document.getElementById("vlg-status-text").innerText = t.msg;
         document.getElementById("vlg-video-player").style.filter = t.filter;
         
-        // ✨ 調用全新升級的 100 種隨機語句模版庫
         document.getElementById("ai-text").innerText = generateAIText(t);
     },
 
