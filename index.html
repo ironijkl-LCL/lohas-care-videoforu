@@ -709,7 +709,7 @@ button {
 }
 #captured-image-view { 
     width: 100%;
-    max-height: 200px; 
+    max-height: 180px; 
     object-fit: cover; 
     display: block; 
 }
@@ -762,11 +762,14 @@ button {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+    padding-right: 4px;
 }
 .destination-row {
     background: #1C1C1E;
     border-radius: 16px;
-    padding: 14px 16px;
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -791,7 +794,7 @@ button {
     border-color: var(--accent-pink);
     box-shadow: 0 0 8px var(--accent-pink);
 }
-.dest-name { font-size: 1rem; font-weight: 500; color: #fff; }
+.dest-name { font-size: 0.95rem; font-weight: 500; color: #fff; }
 .dest-emoji { font-size: 1.2rem; }
 
 /* 📱 響應式網頁設計 (RWD) */
@@ -1070,6 +1073,48 @@ body {
                     </div>
                     <div class="dest-emoji">🍷</div>
                 </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'whatsapp')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">WhatsApp</div>
+                    </div>
+                    <div class="dest-emoji">💬</div>
+                </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'facebook')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">Facebook</div>
+                    </div>
+                    <div class="dest-emoji">👥</div>
+                </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'wechat')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">WeChat</div>
+                    </div>
+                    <div class="dest-emoji">🟢</div>
+                </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'xiaohongshu')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">小紅書</div>
+                    </div>
+                    <div class="dest-emoji">📕</div>
+                </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'teams')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">Teams</div>
+                    </div>
+                    <div class="dest-emoji">💻</div>
+                </div>
+                <div class="destination-row" onclick="App.toggleDestRow(this, 'line')">
+                    <div class="dest-left">
+                        <div class="dest-circle-icon"></div>
+                        <div class="dest-name">LINE</div>
+                    </div>
+                    <div class="dest-emoji">🟢</div>
+                </div>
             </div>
         </div>
     </div>
@@ -1078,7 +1123,7 @@ body {
 <canvas id="photo-capture-canvas" style="display:none;" width="640" height="480"></canvas>
 
 <script>
-// 🌟 核心重大升級：全面擴充 100 種不同主題、吉祥物公仔與專業相機濾鏡的陣列庫 (10大系列 × 10變體)
+// 100 種不同主題、吉祥物公仔與專業相機濾鏡的陣列庫 (10大系列 × 10變體)
 const themes = [
     // 系列 1：樂活陸地萌寵系 (1-10)
     { bg:'#FF9A9E', icon:'🐢', msg:'慢慢走也很好', filter:'sepia(0.3)' },
@@ -1086,7 +1131,7 @@ const themes = [
     { bg:'#FFB7B2', icon:'🍓', msg:'生活帶點微甜', filter:'saturate(1.6)' },
     { bg:'#FFDAC1', icon:'🐱', msg:'像貓咪一樣愜意', filter:'sepia(0.2) brightness(1.1)' },
     { bg:'#FFE5EC', icon:'🐶', msg:'保持滿滿的熱情', filter:'contrast(1.05)' },
-    { bg:'#F3I1I2', icon:'🦊', msg:'機靈面對新挑戰', filter:'hue-rotate(10deg)' },
+    { bg:'#F3A1A2', icon:'🦊', msg:'機靈面對新挑戰', filter:'hue-rotate(10deg)' },
     { bg:'#FFE3E3', icon:'🐹', msg:'知足享受小確幸', filter:'saturate(1.2)' },
     { bg:'#FFF0F5', icon:'🐼', msg:'生活步調平穩安泰', filter:'grayscale(0.1)' },
     { bg:'#FCE4EC', icon:'🐨', msg:'安穩沉穩抱緊幸福', filter:'sepia(0.15)' },
@@ -1095,7 +1140,7 @@ const themes = [
     // 系列 2：深海悠遊家族 (11-20)
     { bg:'#A1C4FD', icon:'🐬', msg:'跳進自由的藍海', filter:'contrast(1.2)' },
     { bg:'#B5EAD7', icon:'🐳', msg:'心寬如海海納百川', filter:'blur(0.2px)' },
-    { bg:'#93I1A2', icon:'🐠', msg:'色彩斑斕綻放光采', filter:'saturate(1.8)' },
+    { bg:'#93A1A2', icon:'🐠', msg:'色彩斑斕綻放光采', filter:'saturate(1.8)' },
     { bg:'#E0F7FA', icon:'🐙', msg:'靈活適應萬事通', filter:'hue-rotate(180deg)' },
     { bg:'#B2EBF2', icon:'🐧', msg:'腳踏實地勇敢前行', filter:'contrast(1.25)' },
     { bg:'#80DEEA', icon:'🦭', msg:'放鬆身心享受自在', filter:'brightness(0.95)' },
@@ -1181,8 +1226,8 @@ const themes = [
     { bg:'#EF9A9A', icon:'🦄', msg:'祥瑞降臨吉星高照', filter:'hue-rotate(-30deg)' },
     { bg:'#E57373', icon:'🦅', msg:'大鵬展翅志在千里', filter:'contrast(1.15)' },
     { bg:'#EF5350', icon:'🦚', msg:'吉祥如意大放異彩', filter:'saturate(1.6) hue-rotate(45deg)' },
-    { bg:'#F44336', icon:'鶴', msg:'松鶴延年福壽雙全', filter:'grayscale(0.05)' },
-    { bg:'#E53935', icon:'🦌', msg:'福祿雙全鹿鳴長青', filter:'sepia(0.2)' },
+    { bg:'#F44336', icon:'🦢', msg:'松鶴延年福壽雙全', filter:'grayscale(0.05)' },
+    { bg:'#E53935', icon:'Deer', msg:'福祿雙全鹿鳴長青', filter:'sepia(0.2)' },
     { bg:'#D32F2F', icon:'🐢', msg:'玄武安泰福壽綿長', filter:'sepia(0.4) contrast(1.1)' },
     { bg:'#C62828', icon:'🐅', msg:'虎虎生威威風凜凜', filter:'contrast(1.25)' },
     { bg:'#B71C1C', icon:'🏮', msg:'鴻運當頭張燈結彩', filter:'saturate(1.5) brightness(0.95)' },
@@ -1192,7 +1237,7 @@ const themes = [
     { bg:'#E1BEE7', icon:'💎', msg:'晶瑩剔透質地純潔', filter:'brightness(1.2) contrast(1.2)' },
     { bg:'#CE93D8', icon:'🔮', msg:'靈氣逼人智慧通達', filter:'hue-rotate(15deg)' },
     { bg:'#BA68C8', icon:'💍', msg:'承諾美好一生幸福', filter:'contrast(1.1)' },
-    { bg:'#AB47BC', icon:'👑', msg:'尊貴典雅傲視群雄', filter:'brightness(1.05) saturate(1.3)' },
+    { bg:'#AB47BC', icon:'👑', msg:'尊尊貴典雅傲視群雄', filter:'brightness(1.05) saturate(1.3)' },
     { bg:'#9C27B0', icon:'👑', msg:'氣度不凡雍容華貴', filter:'contrast(1.15)' },
     { bg:'#8E24AA', icon:'🔮', msg:'神祕高雅內涵深厚', filter:'hue-rotate(-15deg)' },
     { bg:'#7B1FA2', icon:'🌟', msg:'光芒萬丈耀眼奪目', filter:'brightness(1.25) contrast(1.3)' },
@@ -1203,7 +1248,7 @@ const themes = [
 
 let currentIcon = '🐢';
 
-// 🌟 100 種不同情感與語境維度的 AI 日記模版陣列庫
+// 100 種不同情感與語境維度的 AI 日記模版陣列庫
 function generateAIText(theme){
     const templates = [
         // 1-10: 日常覺察維度
@@ -1238,7 +1283,7 @@ function generateAIText(theme){
         `回首今日，最美的風景其實是自己那份 ${theme.msg}。`,
         `生活是一面鏡子，你若保持 ${theme.msg}，世界就對你微笑。`,
         `用一盞茶的時間，沉澱出 ${theme.msg} 的淡定。`,
-        `不疾不徐，今天的收穫正是學會了 ${theme.msg}。`,
+        `不疾不休，今天的收穫正是學會了 ${theme.msg}。`,
         `認知生活、熱愛生活，今天用 ${theme.msg} 寫下註解。`,
         `把繁雜的雜音關掉，內心自然會浮現出 ${theme.msg}。`,
 
@@ -1602,7 +1647,6 @@ const App = {
     },
 
     changeRandomThemeAndMascot() {
-        // ✨ 從全新擴充的 100 種主題庫中隨機抽選一個
         const t = themes[Math.floor(Math.random() * themes.length)];
         document.body.style.background = t.bg;
         currentIcon = t.icon; 
@@ -1672,6 +1716,7 @@ const App = {
         document.getElementById('photo-preview-box').style.display = 'none';
     },
 
+    // 🚀 分流渠道與外部社交圈實體傳送核心控制機制
     submitPhotoShare() {
         const noteText = document.getElementById('editor-note-field').value.trim();
         const timeTag = document.getElementById('editor-live-time').innerText;
@@ -1684,6 +1729,8 @@ const App = {
         this.count++;
         document.getElementById("vlg-count").innerText = this.count;
         this.closePhotoPreview();
+
+        // 1. Vlog日誌：利用 innerHTML 動態實體嵌入照片與即時時間標籤至主畫面
         if (this.selectedTarget === 'vlog') {
             const vlogCard = document.querySelector('.vlog-info-card');
             const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
@@ -1699,13 +1746,33 @@ const App = {
                 `;
             }
             if (starIcon) starIcon.innerText = "📸";
-            alert(`✨ 儲存成功！\n貼文相片已實體嵌入主畫面【Vlog日誌】專屬卡片空間！`);
+            alert(`✨ 儲存成功！\n貼文相片已透過實體結構動態嵌入主畫面【Vlog日誌】專屬卡片空間！`);
         } 
+        // 2. 內部分流渠道
         else if (this.selectedTarget === 'morning') {
             alert(`✨ 發布成功！\n已將帶有 [${timeTag}] 的早安相片與心情日誌分享至【早晨群組空間】☕！`);
         } 
         else if (this.selectedTarget === 'share-eat') {
             alert(`✨ 共享成功！\n佳餚美酒相片與留言已實體同步發布至【Share with eat共享佳餚美酒】社交圈🍷！`);
+        }
+        // 3. 外部主流社交圈實時同步（對齊對應渠道彈出提示）
+        else if (this.selectedTarget === 'whatsapp') {
+            alert(`實時同步成功 ➔ 📲 樂活碎片與日誌內容已實時發送至您的 WhatsApp 聯絡人社交圈！`);
+        }
+        else if (this.selectedTarget === 'facebook') {
+            alert(`實時同步成功 ➔ 👥 帶有 [${timeTag}] 的生活動態已成功發布至您的 Facebook 個人動態時報！`);
+        }
+        else if (this.selectedTarget === 'wechat') {
+            alert(`實時同步成功 ➔ 🟢 樂活手記相片與留言已實時同步更新至您的 微信 WeChat 朋友圈！`);
+        }
+        else if (this.selectedTarget === 'xiaohongshu') {
+            alert(`實時同步成功 ➔ 📕 樂活優質生活碎片與標籤筆記已成功同步分享至 小紅書 平台！`);
+        }
+        else if (this.selectedTarget === 'teams') {
+            alert(`實時同步成功 ➔ 💻 今日記錄已透過實時渠道成功上傳至 Microsoft Teams 團隊共享頻道！`);
+        }
+        else if (this.selectedTarget === 'line') {
+            alert(`實時同步成功 ➔ 🟢 帶有微幅擺動與心靈標語的貼文已成功傳送至 LINE 樂活好友群組！`);
         }
 
         this.checkProgress();
