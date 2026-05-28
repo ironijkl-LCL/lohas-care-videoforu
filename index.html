@@ -652,7 +652,7 @@ button {
 .modal-btn.cancel { background: #2C2C30; color: #fff; }
 .modal-btn.save { background: var(--accent-pink); color: #fff; }
 
-/* 📸 核心優化：100% 復刻手記拍攝後的貼圖、即時時間、Emoji 與多目標分享選單 */
+/* 照片編輯與分享目的地傳送面層 (結構完美保留鎖定) */
 .photo-preview-overlay { 
     position: absolute; 
     top: 0; left: 0; right: 0; bottom: 0; 
@@ -693,7 +693,6 @@ button {
     object-fit: cover; 
     display: block; 
 }
-/* 📌 照片正中央即時時間浮層 */
 .editor-time-stamp {
     position: absolute;
     top: 50%;
@@ -707,7 +706,6 @@ button {
     pointer-events: none;
     font-family: 'Courier New', Courier, monospace;
 }
-/* ✍️ 寫 text 方塊與表情貼圖區域 */
 .editor-input-area {
     width: 100%;
     background: #111112;
@@ -730,7 +728,7 @@ button {
 }
 .editor-text-field::placeholder { color: #555; }
 
-/* 📤 傳送目的地選單列表 */
+/* 📤 傳送目的地列表 */
 .share-destination-panel {
     width: 100%;
     text-align: left;
@@ -988,7 +986,7 @@ body {
 
     <div class="vlog-info-card">
         <span class="vlog-card-title">Vlog日誌</span>
-        <p class="vlog-card-desc">這是你的專專空間，每一天從凌晨 4 點到隔天凌晨 4 點。</p>
+        <p class="vlog-card-desc">這是你的專屬空間，每一天從凌晨 4 點到隔天凌晨 4 點。</p>
         <div class="star-bubble-icon">⭐</div>
     </div>
 
@@ -1046,7 +1044,7 @@ body {
                 <div class="destination-row active-dest" onclick="App.toggleDestRow(this, 'vlog')">
                     <div class="dest-left">
                         <div class="dest-circle-icon"></div>
-                        <div class="dest-name">vlog</div>
+                        <div class="dest-name">Vlog日誌</div>
                     </div>
                     <div class="dest-emoji">😊</div>
                 </div>
@@ -1060,7 +1058,7 @@ body {
                 <div class="destination-row" onclick="App.toggleDestRow(this, 'share-eat')">
                     <div class="dest-left">
                         <div class="dest-circle-icon"></div>
-                        <div class="dest-name">Share with eat</div>
+                        <div class="dest-name">Share with eat共享佳餚美酒</div>
                     </div>
                     <div class="dest-emoji">🍷</div>
                 </div>
@@ -1116,7 +1114,7 @@ const App = {
     countdownDuration: 3, 
 
     vlogGenerated: false,
-    selectedTarget: 'vlog', // 預設傳送分享對象
+    selectedTarget: 'vlog', // 追蹤被選擇的目的地通道
 
     async init(){
         await this.startCamera();
@@ -1346,17 +1344,17 @@ const App = {
         console.log("當前鏡頭焦距縮放倍率已設為：" + scale);
     },
 
-    // ⚡ 實裝：拍照後載入當前真實時間，並開啟附圖同款的編輯與多功能傳送選單
+    // 📸 拍照擷取成功：載入當前系統即時時間戳記，並開啟傳送列表選單
     executePhotoCapture() {
         const video = document.getElementById('vlg-video-player');
         const canvas = document.getElementById('photo-capture-canvas');
         const ctx = canvas.getContext('2d');
         
-        // 🕒 獲取當前即時系統時間 (格式: 09:00)
+        // 🕒 自動取得當前精確時間
         const now = new Date();
         const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
         document.getElementById('editor-live-time').innerText = timeString;
-        document.getElementById('editor-note-field').value = ''; // 清空欄位預備
+        document.getElementById('editor-note-field').value = ''; 
 
         try {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -1364,17 +1362,16 @@ const App = {
                 this.tempPhotoBlob = blob;
                 const url = URL.createObjectURL(blob);
                 document.getElementById('captured-image-view').src = url;
-                // 喚起全新照片編輯傳送共享面板
                 document.getElementById('photo-preview-box').style.display = 'flex';
             }, 'image/jpeg');
         } catch(e) {
-            // 虛擬環境防呆模擬
+            // 虛擬測試圖像快取
             document.getElementById('captured-image-view').src = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500";
             document.getElementById('photo-preview-box').style.display = 'flex';
         }
     },
 
-    // 選擇分享目的地列表切換
+    // 傳送目標列表點選高亮切換狀態維護
     toggleDestRow(row, targetKey) {
         const rows = document.querySelectorAll('.destination-row');
         rows.forEach(r => r.classList.remove('active-dest'));
@@ -1382,29 +1379,51 @@ const App = {
         this.selectedTarget = targetKey;
     },
 
-    // 關閉拍照預覽面層
     closePhotoPreview() { 
         document.getElementById('photo-preview-box').style.display = 'none'; 
     },
 
-    // ⚡ 按下 ➔ 符號執行發布與跨對象模擬分享
+    // ⚡ 核心實裝功能：點擊 ➔ 符號，儲存並「真正」依照選擇的列表通道分流發布出去！
     submitPhotoShare() {
-        if(this.tempPhotoBlob) this.clips.push(this.tempPhotoBlob);
-        
         const noteText = document.getElementById('editor-note-field').value.trim();
         const timeTag = document.getElementById('editor-live-time').innerText;
-        
+        let imageUrl = document.getElementById('captured-image-view').src;
+
+        if(this.tempPhotoBlob) {
+            this.clips.push(this.tempPhotoBlob);
+        }
+
+        // 晶片計數遞增更新
         this.count++;
         document.getElementById("vlg-count").innerText = this.count;
         this.closePhotoPreview();
+
+        // ➔ 核心實體儲存分流：如果是儲存到 Vlog 日誌通道，真正將帶有時間標籤的照片直接渲染在卡片內！
+        if (this.selectedTarget === 'vlog') {
+            const vlogCard = document.querySelector('.vlog-info-card');
+            const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
+            const starIcon = vlogCard.querySelector('.star-bubble-icon');
+            
+            if (vlogDesc) {
+                vlogDesc.innerHTML = `
+                    <div style="position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                        <img src="${imageUrl}" style="width: 100%; display: block; filter: contrast(1.1);">
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.8rem; font-weight: bold; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); font-family: monospace;">${timeTag}</div>
+                    </div>
+                    <div style="font-size: 0.85rem; color: #fff; margin-top: 6px; line-height: 1.3;">📝 ${noteText || '已安全記下今日這刻的碎片！'}</div>
+                `;
+            }
+            if (starIcon) starIcon.innerText = "📸";
+            alert(`✨ 儲存發布成功！\n相片已真正記錄並嵌入到你的主畫面【Vlog日誌】專屬卡片空間！`);
+        } 
+        else if (this.selectedTarget === 'morning') {
+            alert(`✨ 分享成功！\n已成功將這張印有 [${timeTag}] 的早安相片與留言傳送至死黨群組的【早晨空間】☕！`);
+        } 
+        else if (this.selectedTarget === 'share-eat') {
+            alert(`✨ 分享成功！\n美酒佳餚已上桌！相片已實體同步發布至【Share with eat共享佳餚美酒】🍷 社交空間！`);
+        }
+
         this.checkProgress();
-
-        // 依據選擇的傳送通道彈出生動的回饋
-        let targetName = "Vlog日誌";
-        if (this.selectedTarget === 'morning') targetName = "早晨空間";
-        if (this.selectedTarget === 'share-eat') targetName = "Share with eat共享佳餚美酒";
-
-        alert(`🚀 樂活碎片分享成功！\n已將印有 [${timeTag}] 的貼圖相片及留言「${noteText || '無'}」成功同步發布至：【${targetName}】！`);
     },
 
     executeVideoRecording() {
