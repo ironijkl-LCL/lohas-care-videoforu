@@ -1219,7 +1219,7 @@ const themes = [
     { bg:'#F9A825', icon:'🎭', msg:'千面精彩活出自我', filter:'brightness(1.02)' },
     { bg:'#F57F17', icon:'🍿', msg:'有滋有味看盡風雲', filter:'sepia(0.2)' },
     { bg:'#FFF9C4', icon:'🎫', msg:'解鎖樂活美好入場券', filter:'brightness(1.15)' },
-    { bg:'#FFF59D', icon:'🧸', msg:'溫暖貼心伴你左右', filter:'contrast(1.1)' },
+    { bg:'#FFF59D', icon:'🧸', msg:'溫慢貼心伴你左右', filter:'contrast(1.1)' },
 
     // 系列 9：東方祥瑞瑞獸 (81-90)
     { bg:'#FFCDD2', icon:'🐉', msg:'龍馬精神生龍活虎', filter:'contrast(1.2) saturate(1.3)' },
@@ -1234,7 +1234,7 @@ const themes = [
     { bg:'#FF8A80', icon:'🪙', msg:'富貴吉祥好運連連', filter:'brightness(1.1) saturate(1.4)' },
 
     // 系列 10：璀璨晶鑽寶石 (91-100)
-    { bg:'#E1BEE7', icon:'💎', msg:'晶瑩剔透質地純潔', filter:'brightness(1.2) contrast(1.2)' },
+    { bg:'#E1BEE7', icon:'💎', msg:'晶營剔透質地純潔', filter:'brightness(1.2) contrast(1.2)' },
     { bg:'#CE93D8', icon:'🔮', msg:'靈氣逼人智慧通達', filter:'hue-rotate(15deg)' },
     { bg:'#BA68C8', icon:'💍', msg:'承諾美好一生幸福', filter:'contrast(1.1)' },
     { bg:'#AB47BC', icon:'👑', msg:'尊尊貴典雅傲視群雄', filter:'brightness(1.05) saturate(1.3)' },
@@ -1398,95 +1398,122 @@ const App = {
     vlogGenerated: false,
     selectedTarget: 'vlog',
 
+    // 🛡️ 增強防鎖初始化：確保網頁 DOM 與硬件異常皆不阻塞執行
     async init(){
-        await this.startCamera();
-        this.initNavigationMenus();
-        this.initMascotButtons(); 
-        this.initHardwareButtons(); 
-        this.simulateIncomingNotification();
-        this.switchCameraMode('photo'); 
-        this.initVlogCardTextMode();
-        this.bindActionButtons();
-        this.initToolbarSocialShare();
+        try {
+            await this.startCamera();
+        } catch (camErr) {
+            console.warn("鏡頭初始化受限或被安全性政策阻擋，已無縫啟用軟體虛擬模擬器模組。", camErr);
+        }
+        
+        try {
+            this.initNavigationMenus();
+            this.initMascotButtons(); 
+            this.initHardwareButtons(); 
+            this.simulateIncomingNotification();
+            this.switchCameraMode('photo'); 
+            this.initVlogCardTextMode();
+            this.bindActionButtons();
+            this.initToolbarSocialShare();
+            console.log("✅ LohasVLG 核心引擎完全解鎖並成功載入！");
+        } catch(domErr) {
+            console.error("❌ 介面元件綁定衝突：", domErr);
+        }
     },
 
     async startCamera() {
         if (this.stream) {
             this.stream.getTracks().forEach(track => track.stop());
         }
+        // 🔒 將關鍵硬體 API 包裹，防止未授權時鎖死整套腳本
         try {
             this.stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: this.facingMode },
                 audio: true
             });
-            document.getElementById("vlg-video-player").srcObject = this.stream;
+            const mainVideo = document.getElementById("vlg-video-player");
+            if(mainVideo) mainVideo.srcObject = this.stream;
             const landVideo = document.getElementById('landscape-video-render');
             if(landVideo) landVideo.srcObject = this.stream;
         } catch(e) {
-            console.log("鏡頭啟動受限，啟用虛擬模擬器模式。");
+            console.log("硬體鏡頭未就緒，切換為動態虛擬測試流。");
         }
     },
 
     initHardwareButtons() {
         const flashBtn = document.getElementById('cam-flash-toggle');
-        flashBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.isFlashOn = !this.isFlashOn;
-            flashBtn.classList.toggle('flash-on', this.isFlashOn);
-        });
+        if(flashBtn) {
+            flashBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.isFlashOn = !this.isFlashOn;
+                flashBtn.classList.toggle('flash-on', this.isFlashOn);
+            });
+        }
 
-        document.getElementById('cam-facing-toggle').addEventListener('click', async (e) => {
-            e.stopPropagation();
-            this.facingMode = (this.facingMode === 'user') ? 'environment' : 'user';
-            await this.startCamera();
-        });
+        const facingBtn = document.getElementById('cam-facing-toggle');
+        if(facingBtn) {
+            facingBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                this.facingMode = (this.facingMode === 'user') ? 'environment' : 'user';
+                await this.startCamera();
+            });
+        }
 
-        document.getElementById('cam-timer-toggle').addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (this.cameraMode === 'video') {
-                alert("📹 錄影模式下計時器功能不適用。");
-                return;
-            }
+        const timerBtn = document.getElementById('cam-timer-toggle');
+        if(timerBtn) {
+            timerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (this.cameraMode === 'video') {
+                    alert("📹 錄影模式下計時器功能不適用。");
+                    return;
+                }
 
-            if (this.countdownDuration === 0) {
-                this.countdownDuration = 3;
-            } else if (this.countdownDuration === 3) {
-                this.countdownDuration = 5;
-            } else if (this.countdownDuration === 5) {
-                this.countdownDuration = 10;
-            } else {
-                this.countdownDuration = 0;
-            }
-    
-            const countdownDisplay = document.getElementById('cam-live-countdown');
-            const tagText = document.getElementById('lohas-tag-text');
+                if (this.countdownDuration === 0) {
+                    this.countdownDuration = 3;
+                } else if (this.countdownDuration === 3) {
+                    this.countdownDuration = 5;
+                } else if (this.countdownDuration === 5) {
+                    this.countdownDuration = 10;
+                } else {
+                    this.countdownDuration = 0;
+                }
+        
+                const countdownDisplay = document.getElementById('cam-live-countdown');
+                const tagText = document.getElementById('lohas-tag-text');
 
-            if (this.countdownDuration === 0) {
-                countdownDisplay.innerText = "00:00";
-                tagText.innerText = "📷 鏡頭就緒 (即時拍攝模式)";
-                alert("⏱️ 延時拍攝已關閉，切換為【即時拍照】模式。");
-            } else {
-                countdownDisplay.innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
-                tagText.innerText = `📷 倒計時拍攝中 (${this.countdownDuration} 秒)`;
-                alert(`⏱️ 延時拍照已開啟，倒計時時間已設定為：${this.countdownDuration} 秒。`);
-            }
-        });
+                if (this.countdownDuration === 0) {
+                    if(countdownDisplay) countdownDisplay.innerText = "00:00";
+                    if(tagText) tagText.innerText = "📷 鏡頭就緒 (即時拍攝模式)";
+                    alert("⏱️ 延時拍攝已關閉，切換為【即時拍照】模式。");
+                } else {
+                    if(countdownDisplay) countdownDisplay.innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+                    if(tagText) tagText.innerText = `📷 倒計時拍攝中 (${this.countdownDuration} 秒)`;
+                    alert(`⏱️ 延時拍照已開啟，倒計時時間已設定為：${this.countdownDuration} 秒。`);
+                }
+            });
+        }
     },
 
     bindActionButtons() {
-        document.getElementById('vlg-start-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            if(this.cameraMode === 'photo') {
-                this.trigger(); 
-            } else {
-                this.executeVideoRecording(); 
-            }
-        });
+        const startBtn = document.getElementById('vlg-start-btn');
+        if(startBtn) {
+            startBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if(this.cameraMode === 'photo') {
+                    this.trigger(); 
+                } else {
+                    this.executeVideoRecording(); 
+                }
+            });
+        }
 
-        document.getElementById('vlg-generate-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.generate(); 
-        });
+        const generateBtn = document.getElementById('vlg-generate-btn');
+        if(generateBtn) {
+            generateBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.generate(); 
+            });
+        }
     },
 
     initToolbarSocialShare() {
@@ -1496,15 +1523,21 @@ const App = {
 
         const openSharePanel = (e) => {
             e.stopPropagation();
-            document.getElementById('captured-image-view').src = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500";
+            const viewImg = document.getElementById('captured-image-view');
+            if(viewImg) viewImg.src = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500";
             
             const now = new Date();
-            document.getElementById('editor-live-time').innerText = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('editor-note-field').value = '';
-            document.getElementById('photo-preview-box').style.display = 'flex';
+            const liveTime = document.getElementById('editor-live-time');
+            if(liveTime) liveTime.innerText = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            
+            const noteField = document.getElementById('editor-note-field');
+            if(noteField) noteField.value = '';
+            
+            const previewBox = document.getElementById('photo-preview-box');
+            if(previewBox) previewBox.style.display = 'flex';
         };
 
-        toolbar.addEventListener('click', openSharePanel);
+        if(toolbar) toolbar.addEventListener('click', openSharePanel);
         if(avatarBtn) avatarBtn.addEventListener('click', openSharePanel);
 
         if(cameraBtn) {
@@ -1517,6 +1550,8 @@ const App = {
 
     initVlogCardTextMode() {
         const vlogCard = document.querySelector('.vlog-info-card');
+        if(!vlogCard) return;
+
         vlogCard.addEventListener('click', (e) => {
             if (this.vlogGenerated) {
                 const inlineVideo = document.getElementById('inline-vlog-player');
@@ -1545,20 +1580,24 @@ const App = {
                     </div>
                 `;
 
-                document.getElementById('vlog-note-save-btn').addEventListener('click', (btnEvt) => {
-                    btnEvt.stopPropagation(); 
-                    const textValue = document.getElementById('vlog-note-input').value.trim();
-                    localStorage.setItem('lohas_vlog_note', textValue); 
-                    
-                    if (textValue) {
-                        vlogDesc.innerHTML = `📝 已記下日誌：${textValue}`;
-                    } else {
-                        vlogDesc.innerHTML = `這是你的專屬空間，每一天從凌晨 4 點到隔天凌晨 4 點。`;
-                    }
-                    alert("✨ 文字日誌儲存成功！已就地發布貼文。");
-                });
-                
-                document.getElementById('vlog-note-input').focus();
+                const inputEl = document.getElementById('vlog-note-input');
+                const saveBtn = document.getElementById('vlog-note-save-btn');
+
+                if(saveBtn && inputEl) {
+                    saveBtn.addEventListener('click', (btnEvt) => {
+                        btnEvt.stopPropagation(); 
+                        const textValue = inputEl.value.trim();
+                        localStorage.setItem('lohas_vlog_note', textValue); 
+                        
+                        if (textValue) {
+                            vlogDesc.innerHTML = `📝 已記下日誌：${textValue}`;
+                        } else {
+                            vlogDesc.innerHTML = `這是你的專屬空間，每一天從凌晨 4 點到隔天凌晨 4 點。`;
+                        }
+                        alert("✨ 文字日誌儲存成功！已就地發布貼文。");
+                    });
+                    inputEl.focus();
+                }
             }
         });
     },
@@ -1566,23 +1605,32 @@ const App = {
     switchCameraMode(mode) {
         if(this.isRecording) return;
         this.cameraMode = mode;
-        document.getElementById('mode-photo').classList.toggle('active', mode === 'photo');
-        document.getElementById('mode-video').classList.toggle('active', mode === 'video');
+        const photoOpt = document.getElementById('mode-photo');
+        const videoOpt = document.getElementById('mode-video');
+        if(photoOpt) photoOpt.classList.toggle('active', mode === 'photo');
+        if(videoOpt) videoOpt.classList.toggle('active', mode === 'video');
+        
         const tagText = document.getElementById('lohas-tag-text');
         const startBtn = document.getElementById('vlg-start-btn');
         
         if(mode === 'photo') {
-            if (this.countdownDuration === 0) {
-                tagText.innerText = "📷 鏡頭就緒 (即時拍攝模式)";
-            } else {
-                tagText.innerText = `📷 倒計時拍攝中 (${this.countdownDuration} 秒)`;
+            if(tagText) {
+                if (this.countdownDuration === 0) {
+                    tagText.innerText = "📷 鏡頭就緒 (即時拍攝模式)";
+                } else {
+                    tagText.innerText = `📷 倒計時拍攝中 (${this.countdownDuration} 秒)`;
+                }
             }
-            startBtn.innerText = "📸 拍攝"; 
-            startBtn.className = "mode-shutter-active"; 
+            if(startBtn) {
+                startBtn.innerText = "📸 拍攝"; 
+                startBtn.className = "mode-shutter-active"; 
+            }
         } else {
-            tagText.innerText = "📹 鏡頭就緒 (錄製影片模式)";
-            startBtn.innerText = "📹 錄影"; 
-            startBtn.className = "mode-video-active"; 
+            if(tagText) tagText.innerText = "📹 鏡頭就緒 (錄製影片模式)";
+            if(startBtn) {
+                startBtn.innerText = "📹 錄影"; 
+                startBtn.className = "mode-video-active"; 
+            }
         }
     },
 
@@ -1601,22 +1649,27 @@ const App = {
             return;
         }
         const landVideo = document.getElementById('landscape-video-render');
-        if(this.stream) landVideo.srcObject = this.stream;
+        if(this.stream && landVideo) landVideo.srcObject = this.stream;
         
         const countdownDisplay = document.getElementById('cam-live-countdown');
-        if(this.cameraMode === 'photo') {
-            if (this.countdownDuration === 0) {
-                countdownDisplay.innerText = "00:00";
+        if(countdownDisplay) {
+            if(this.cameraMode === 'photo') {
+                if (this.countdownDuration === 0) {
+                    countdownDisplay.innerText = "00:00";
+                } else {
+                    countdownDisplay.innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+                }
+                const shutterIcon = document.getElementById('cam-shutter-icon');
+                if(shutterIcon) shutterIcon.innerText = "📸";
             } else {
-                countdownDisplay.innerText = "00:" + String(this.countdownDuration).padStart(2, '0');
+                countdownDisplay.innerText = "00:00";
+                const shutterIcon = document.getElementById('cam-shutter-icon');
+                if(shutterIcon) shutterIcon.innerText = "😊";
             }
-            document.getElementById('cam-shutter-icon').innerText = "📸";
-        } else {
-            countdownDisplay.innerText = "00:00";
-            document.getElementById('cam-shutter-icon').innerText = "😊";
         }
 
-        document.getElementById('overlay-landscape-camera').style.display = 'flex';
+        const camOverlay = document.getElementById('overlay-landscape-camera');
+        if(camOverlay) camOverlay.style.display = 'flex';
     },
 
     executeShutterAction() {
@@ -1632,8 +1685,8 @@ const App = {
                 clearInterval(this.activeTimer);
                 this.activeTimer = setInterval(() => {
                     timeLeft--;
-                    countdownDisplay.innerText = "00:" + String(timeLeft).padStart(2, '0');
-                    tagText.innerText = `📷 倒計時拍攝中 (${timeLeft} 秒)`;
+                    if(countdownDisplay) countdownDisplay.innerText = "00:" + String(timeLeft).padStart(2, '0');
+                    if(tagText) tagText.innerText = `📷 倒計時拍攝中 (${timeLeft} 秒)`;
                     
                     if (timeLeft <= 0) {
                         clearInterval(this.activeTimer);
@@ -1651,20 +1704,26 @@ const App = {
         document.body.style.background = t.bg;
         currentIcon = t.icon; 
         
-        document.getElementById("mascot-display").innerText = currentIcon;
-        document.getElementById("mascot-right-btn").innerText = currentIcon;
-        
-        document.getElementById("vlg-status-text").innerText = t.msg;
-        document.getElementById("vlg-video-player").style.filter = t.filter;
-        
-        document.getElementById("ai-text").innerText = generateAIText(t);
+        const mascotDisp = document.getElementById("mascot-display");
+        const mascotRight = document.getElementById("mascot-right-btn");
+        const statusTxt = document.getElementById("vlg-status-text");
+        const videoPlayer = document.getElementById("vlg-video-player");
+        const aiTextEl = document.getElementById("ai-text");
+
+        if(mascotDisp) mascotDisp.innerText = currentIcon;
+        if(mascotRight) mascotRight.innerText = currentIcon;
+        if(statusTxt) statusTxt.innerText = t.msg;
+        if(videoPlayer) videoPlayer.style.filter = t.filter;
+        if(aiTextEl) aiTextEl.innerText = generateAIText(t);
     },
 
     performFinalCapture() {
         if (this.isFlashOn) {
             const flashOverlay = document.getElementById('flash-overlay');
-            flashOverlay.style.opacity = '1';
-            setTimeout(() => flashOverlay.style.opacity = '0', 150);
+            if(flashOverlay) {
+                flashOverlay.style.opacity = '1';
+                setTimeout(() => flashOverlay.style.opacity = '0', 150);
+            }
         }
 
         this.changeRandomThemeAndMascot();
@@ -1677,6 +1736,7 @@ const App = {
     },
 
     setZoom(element, scale) {
+        if(!element) return;
         const opts = element.parentNode.querySelectorAll('.zoom-opt');
         opts.forEach(o => o.classList.remove('active'));
         element.classList.add('active');
@@ -1685,27 +1745,37 @@ const App = {
     executePhotoCapture() {
         const video = document.getElementById('vlg-video-player');
         const canvas = document.getElementById('photo-capture-canvas');
+        if(!canvas || !video) return;
         const ctx = canvas.getContext('2d');
         
         const now = new Date();
         const timeString = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-        document.getElementById('editor-live-time').innerText = timeString;
-        document.getElementById('editor-note-field').value = '';
+        const liveTime = document.getElementById('editor-live-time');
+        if(liveTime) liveTime.innerText = timeString;
+        
+        const noteField = document.getElementById('editor-note-field');
+        if(noteField) noteField.value = '';
+
         try {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob((blob) => {
                 this.tempPhotoBlob = blob;
                 const url = URL.createObjectURL(blob);
-                document.getElementById('captured-image-view').src = url;
-                document.getElementById('photo-preview-box').style.display = 'flex';
+                const capturedView = document.getElementById('captured-image-view');
+                if(capturedView) capturedView.src = url;
+                const previewBox = document.getElementById('photo-preview-box');
+                if(previewBox) previewBox.style.display = 'flex';
             }, 'image/jpeg');
         } catch(e) {
-            document.getElementById('captured-image-view').src = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500";
-            document.getElementById('photo-preview-box').style.display = 'flex';
+            const capturedView = document.getElementById('captured-image-view');
+            if(capturedView) capturedView.src = "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500";
+            const previewBox = document.getElementById('photo-preview-box');
+            if(previewBox) previewBox.style.display = 'flex';
         }
     },
 
     toggleDestRow(row, targetKey) {
+        if(!row) return;
         const rows = document.querySelectorAll('.destination-row');
         rows.forEach(r => r.classList.remove('active-dest'));
         row.classList.add('active-dest');
@@ -1713,49 +1783,54 @@ const App = {
     },
 
     closePhotoPreview() { 
-        document.getElementById('photo-preview-box').style.display = 'none';
+        const previewBox = document.getElementById('photo-preview-box');
+        if(previewBox) previewBox.style.display = 'none'; 
     },
 
-    // 🚀 分流渠道與外部社交圈實體傳送核心控制機制
     submitPhotoShare() {
-        const noteText = document.getElementById('editor-note-field').value.trim();
-        const timeTag = document.getElementById('editor-live-time').innerText;
-        let imageUrl = document.getElementById('captured-image-view').src;
+        const noteField = document.getElementById('editor-note-field');
+        const noteText = noteField ? noteField.value.trim() : '';
+        
+        const liveTime = document.getElementById('editor-live-time');
+        const timeTag = liveTime ? liveTime.innerText : '00:00';
+        
+        const capturedView = document.getElementById('captured-image-view');
+        let imageUrl = capturedView ? capturedView.src : '';
 
         if(this.tempPhotoBlob) {
             this.clips.push(this.tempPhotoBlob);
         }
 
         this.count++;
-        document.getElementById("vlg-count").innerText = this.count;
+        const countEl = document.getElementById("vlg-count");
+        if(countEl) countEl.innerText = this.count;
         this.closePhotoPreview();
 
-        // 1. Vlog日誌：利用 innerHTML 動態實體嵌入照片與即時時間標籤至主畫面
         if (this.selectedTarget === 'vlog') {
             const vlogCard = document.querySelector('.vlog-info-card');
-            const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
-            const starIcon = vlogCard.querySelector('.star-bubble-icon');
-            
-            if (vlogDesc) {
-                vlogDesc.innerHTML = `
-                    <div style="position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
-                        <img src="${imageUrl}" style="width: 100%; display: block;">
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.8rem; font-weight: bold; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); font-family: monospace;">${timeTag}</div>
-                    </div>
-                    <div style="font-size: 0.85rem; color: #fff; margin-top: 6px; line-height: 1.3;">📝 ${noteText || '已安全記下今日這刻的碎片貼文！'}</div>
-                `;
+            if (vlogCard) {
+                const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
+                const starIcon = vlogCard.querySelector('.star-bubble-icon');
+                
+                if (vlogDesc) {
+                    vlogDesc.innerHTML = `
+                        <div style="position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                            <img src="${imageUrl}" style="width: 100%; display: block;">
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.8rem; font-weight: bold; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); font-family: monospace;">${timeTag}</div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: #fff; margin-top: 6px; line-height: 1.3;">📝 ${noteText || '已安全記下今日這刻的碎片貼文！'}</div>
+                    `;
+                }
+                if (starIcon) starIcon.innerText = "📸";
             }
-            if (starIcon) starIcon.innerText = "📸";
-            alert(`✨ 儲存成功！\n貼文相片已透過實體結構動態嵌入主畫面【Vlog日誌】專屬卡片空間！`);
+            alert(`✨ 儲存成功！\n貼文相片已實體嵌入主畫面【Vlog日誌】專屬卡片空間！`);
         } 
-        // 2. 內部分流渠道
         else if (this.selectedTarget === 'morning') {
             alert(`✨ 發布成功！\n已將帶有 [${timeTag}] 的早安相片與心情日誌分享至【早晨群組空間】☕！`);
         } 
         else if (this.selectedTarget === 'share-eat') {
             alert(`✨ 共享成功！\n佳餚美酒相片與留言已實體同步發布至【Share with eat共享佳餚美酒】社交圈🍷！`);
         }
-        // 3. 外部主流社交圈實時同步（對齊對應渠道彈出提示）
         else if (this.selectedTarget === 'whatsapp') {
             alert(`實時同步成功 ➔ 📲 樂活碎片與日誌內容已實時發送至您的 WhatsApp 聯絡人社交圈！`);
         }
@@ -1780,23 +1855,28 @@ const App = {
 
     executeVideoRecording() {
         const countdownDisplay = document.getElementById('cam-live-countdown');
-        
+        const tagText = document.getElementById('lohas-tag-text');
+        const startBtn = document.getElementById('vlg-start-btn');
+        const statusDot = document.getElementById('lohas-status-dot');
+
         if(!this.isRecording) {
             this.isRecording = true;
             this.chunks = [];
-            document.getElementById('vlg-start-btn').innerText = "🛑 停止"; 
-            document.getElementById('vlg-start-btn').className = "mode-video-active"; 
-            document.getElementById('lohas-status-dot').classList.add('recording');
-            document.getElementById('lohas-tag-text').innerText = "🔴 正在錄製影片中...";
+            if(startBtn) {
+                startBtn.innerText = "🛑 停止"; 
+                startBtn.className = "mode-video-active"; 
+            }
+            if(statusDot) statusDot.classList.add('recording');
+            if(tagText) tagText.innerText = "🔴 正在錄製影片中...";
             
             this.videoRecordElapsedTime = 0;
-            countdownDisplay.innerText = "00:00";
+            if(countdownDisplay) countdownDisplay.innerText = "00:00";
             clearInterval(this.videoRecordInterval);
             this.videoRecordInterval = setInterval(() => {
                 this.videoRecordElapsedTime++;
                 let mins = String(Math.floor(this.videoRecordElapsedTime / 60)).padStart(2, '0');
                 let secs = String(this.videoRecordElapsedTime % 60).padStart(2, '0');
-                countdownDisplay.innerText = `${mins}:${secs}`;
+                if(countdownDisplay) countdownDisplay.innerText = `${mins}:${secs}`;
             }, 1000);
 
             if(this.stream) {
@@ -1806,7 +1886,8 @@ const App = {
                     const blob = new Blob(this.chunks, {type: "video/webm"});
                     this.clips.push(blob);
                     this.count++;
-                    document.getElementById("vlg-count").innerText = this.count;
+                    const countEl = document.getElementById("vlg-count");
+                    if(countEl) countEl.innerText = this.count;
                     this.checkProgress();
                 };
                 this.recorder.start();
@@ -1821,12 +1902,13 @@ const App = {
             
             this.switchCameraMode(this.cameraMode);
             
-            document.getElementById('lohas-status-dot').classList.remove('recording');
+            if(statusDot) statusDot.classList.remove('recording');
             if(this.recorder && this.recorder.state !== "inactive") {
                 this.recorder.stop();
             } else if(!this.stream) {
                 this.count++;
-                document.getElementById("vlg-count").innerText = this.count;
+                const countEl = document.getElementById("vlg-count");
+                if(countEl) countEl.innerText = this.count;
                 this.checkProgress();
             }
         }
@@ -1834,8 +1916,10 @@ const App = {
 
     checkProgress() {
         if(this.count < 3) {
-            document.getElementById('lohas-bell-badge').style.display = 'block';
-            document.getElementById('noti-content').innerHTML = `溫馨小幫手：今天還差 ${3 - this.count} 個片段就能生成日記囉！`;
+            const bellBadge = document.getElementById('lohas-bell-badge');
+            const notiContent = document.getElementById('noti-content');
+            if(bellBadge) bellBadge.style.display = 'block';
+            if(notiContent) notiContent.innerHTML = `溫馨小幫手：今天還差 ${3 - this.count} 個片段就能生成日記囉！`;
         }
     },
 
@@ -1853,52 +1937,103 @@ const App = {
         this.vlogGenerated = true;
 
         const v = document.getElementById("vlg-video-player");
-        v.srcObject = null;
-        v.src = url;
-        v.controls = true;
-        document.getElementById("vlg-status-text").innerText = "🎬 完成!";
+        if(v) {
+            v.srcObject = null;
+            v.src = url;
+            v.controls = true;
+        }
+        
+        const statusTxt = document.getElementById("vlg-status-text");
+        if(statusTxt) statusTxt.innerText = "🎬 完成!";
+        
         const logPlayer = document.getElementById("log-output-player");
-        logPlayer.src = url;
+        if(logPlayer) logPlayer.src = url;
         
         const vlogCard = document.querySelector('.vlog-info-card');
-        const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
-        const starIcon = vlogCard.querySelector('.star-bubble-icon');
-        if (vlogDesc) {
-            vlogDesc.innerHTML = `
-                <video id="inline-vlog-player" src="${url}" controls poster="" 
-                    style="width: 100%; height: auto; border-radius: 14px; margin-top: 8px; display: block; background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
-                </video>
-            `;
-        }
-        if (starIcon) {
-            starIcon.innerText = "🎬";
+        if (vlogCard) {
+            const vlogDesc = vlogCard.querySelector('.vlog-card-desc');
+            const starIcon = vlogCard.querySelector('.star-bubble-icon');
+            if (vlogDesc) {
+                vlogDesc.innerHTML = `
+                    <video id="inline-vlog-player" src="${url}" controls poster="" 
+                        style="width: 100%; height: auto; border-radius: 14px; margin-top: 8px; display: block; background: #000; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                    </video>
+                `;
+            }
+            if (starIcon) starIcon.innerText = "🎬";
         }
         
-        document.getElementById("overlay-view-log").style.display = "flex";
-        document.getElementById('lohas-bell-badge').style.display = 'block';
-        document.getElementById('noti-content').innerHTML = `🎉 成功解鎖！今天的每日手記已生成，已自動分享同步給你的死黨！`;
+        const viewLog = document.getElementById("overlay-view-log");
+        if(viewLog) viewLog.style.display = "flex";
+        
+        const bellBadge = document.getElementById('lohas-bell-badge');
+        const notiContent = document.getElementById('noti-content');
+        if(bellBadge) bellBadge.style.display = 'block';
+        if(notiContent) notiContent.innerHTML = `🎉 成功解鎖！今天的每日手記已生成，已自動分享同步給你的死黨！`;
     },
 
     initNavigationMenus() {
         const mainPops = ['popover-plus', 'popover-bell', 'popover-main-menu', 'popover-sub-profile', 'popover-sub-colors', 'popover-sub-noti', 'popover-sub-account'];
-        function closeAllPops() { mainPops.forEach(id => document.getElementById(id).style.display = 'none'); }
+        function closeAllPops() { mainPops.forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; }); }
 
-        document.getElementById('lohas-plus-btn').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-plus').style.display = 'block'; });
-        document.getElementById('lohas-bell-btn').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-bell').style.display = 'block'; document.getElementById('lohas-bell-badge').style.display = 'none'; });
-        document.getElementById('lohas-more-btn').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
+        const plusBtn = document.getElementById('lohas-plus-btn');
+        if(plusBtn) plusBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-plus'); if(pop) pop.style.display = 'block'; });
+        
+        const bellBtn = document.getElementById('lohas-bell-btn');
+        if(bellBtn) {
+            bellBtn.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                closeAllPops(); 
+                const pop = document.getElementById('popover-bell'); 
+                if(pop) pop.style.display = 'block'; 
+                const badge = document.getElementById('lohas-bell-badge');
+                if(badge) badge.style.display = 'none'; 
+            });
+        }
+        
+        const moreBtn = document.getElementById('lohas-more-btn');
+        if(moreBtn) moreBtn.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-main-menu'); if(pop) pop.style.display = 'block'; });
 
-        document.getElementById('item-create-log').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('overlay-create-log').style.display = 'flex'; });
-        document.getElementById('item-join-log').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('overlay-join-log').style.display = 'flex'; document.getElementById('input-log-code').focus(); });
-        document.getElementById('item-edit-profile').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-profile').style.display = 'block'; });
-        document.getElementById('item-noti-settings').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-noti').style.display = 'block'; });
-        document.getElementById('item-account-settings').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-account').style.display = 'block'; });
+        const createLog = document.getElementById('item-create-log');
+        if(createLog) createLog.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const overlay = document.getElementById('overlay-create-log'); if(overlay) overlay.style.display = 'flex'; });
+        
+        const joinLog = document.getElementById('item-join-log');
+        if(joinLog) {
+            joinLog.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                closeAllPops(); 
+                const overlay = document.getElementById('overlay-join-log'); 
+                if(overlay) overlay.style.display = 'flex'; 
+                const inputField = document.getElementById('input-log-code');
+                if(inputField) inputField.focus(); 
+            });
+        }
+        
+        const editProfile = document.getElementById('item-edit-profile');
+        if(editProfile) editProfile.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-sub-profile'); if(pop) pop.style.display = 'block'; });
+        
+        const notiSettings = document.getElementById('item-noti-settings');
+        if(notiSettings) notiSettings.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-sub-noti'); if(pop) pop.style.display = 'block'; });
+        
+        const accountSettings = document.getElementById('item-account-settings');
+        if(accountSettings) accountSettings.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-sub-account'); if(pop) pop.style.display = 'block'; });
 
-        document.getElementById('back-to-main-1').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
-        document.getElementById('back-to-main-2').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
-        document.getElementById('back-to-main-3').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-main-menu').style.display = 'block'; });
+        const back1 = document.getElementById('back-to-main-1');
+        if(back1) back1.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-main-menu'); if(pop) pop.style.display = 'block'; });
+        
+        const back2 = document.getElementById('back-to-main-2');
+        if(back2) back2.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-main-menu'); if(pop) pop.style.display = 'block'; });
+        
+        const back3 = document.getElementById('back-to-main-3');
+        if(back3) back3.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-main-menu'); if(pop) pop.style.display = 'block'; });
+        
         document.documentElement.style.setProperty('--accent-pink', '#FF64C8');
-        document.getElementById('sub-item-change-color').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-colors').style.display = 'block'; });
-        document.getElementById('back-to-profile').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('popover-sub-profile').style.display = 'block'; });
+        
+        const changeColor = document.getElementById('sub-item-change-color');
+        if(changeColor) changeColor.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-sub-colors'); if(pop) pop.style.display = 'block'; });
+        
+        const backProfile = document.getElementById('back-to-profile');
+        if(backProfile) backProfile.addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); const pop = document.getElementById('popover-sub-profile'); if(pop) pop.style.display = 'block'; });
         
         const colorOpts = document.querySelectorAll('.color-opt');
         colorOpts.forEach(opt => {
@@ -1907,48 +2042,79 @@ const App = {
                 colorOpts.forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
                 const selectedColor = opt.getAttribute('data-color');
-              
                 document.documentElement.style.setProperty('--accent-pink', selectedColor);
-                document.getElementById('vlg-video-player').style.borderColor = selectedColor;
+                const player = document.getElementById('vlg-video-player');
+                if(player) player.style.borderColor = selectedColor;
             });
         });
-        document.getElementById('sub-item-change-name').addEventListener('click', (e) => { e.stopPropagation(); closeAllPops(); document.getElementById('name-modal-overlay').style.display = 'flex'; document.getElementById('input-user-name').focus(); });
-        document.getElementById('modal-cancel-btn').addEventListener('click', () => { document.getElementById('name-modal-overlay').style.display = 'none'; });
-        document.getElementById('modal-save-btn').addEventListener('click', () => { 
-            const newName = document.getElementById('input-user-name').value.trim(); 
-            if(newName) {
-                document.getElementById('display-user-name').innerText = newName;
-                document.getElementById('log-user-name-tag').innerText = newName;
-                document.getElementById('log-user-avatar-tag').innerText = newName.charAt(0);
-            }
- 
-            document.getElementById('name-modal-overlay').style.display = 'none'; 
-        });
+
+        const changeName = document.getElementById('sub-item-change-name');
+        if(changeName) {
+            changeName.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                closeAllPops(); 
+                const overlay = document.getElementById('name-modal-overlay');
+                if(overlay) overlay.style.display = 'flex'; 
+                const inputName = document.getElementById('input-user-name');
+                if(inputName) inputName.focus(); 
+            });
+        }
+        
+        const cancelBtn = document.getElementById('modal-cancel-btn');
+        if(cancelBtn) cancelBtn.addEventListener('click', () => { const overlay = document.getElementById('name-modal-overlay'); if(overlay) overlay.style.display = 'none'; });
+        
+        const saveBtn = document.getElementById('modal-save-btn');
+        if(saveBtn) {
+            saveBtn.addEventListener('click', () => { 
+                const inputName = document.getElementById('input-user-name');
+                const newName = inputName ? inputName.value.trim() : ''; 
+                if(newName) {
+                    const dispName = document.getElementById('display-user-name');
+                    const userTag = document.getElementById('log-user-name-tag');
+                    const avatarTag = document.getElementById('log-user-avatar-tag');
+                    if(dispName) dispName.innerText = newName;
+                    if(userTag) userTag.innerText = newName;
+                    if(avatarTag) avatarTag.innerText = newName.charAt(0);
+                }
+                const overlay = document.getElementById('name-modal-overlay');
+                if(overlay) overlay.style.display = 'none'; 
+            });
+        }
         document.addEventListener('click', () => closeAllPops());
     },
 
     initMascotButtons() {
-        document.getElementById('mascot-display').addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.changeRandomThemeAndMascot();
-            console.log("💡 吉祥物公仔與樂活主題已成功隨機轉換！");
-        });
-        document.getElementById('mascot-right-btn').addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.trigger(); 
-        });
+        const mascotDisp = document.getElementById('mascot-display');
+        if(mascotDisp) {
+            mascotDisp.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.changeRandomThemeAndMascot();
+                console.log("💡 吉祥物公仔與樂活主題已成功隨機轉換！");
+            });
+        }
+        
+        const mascotRight = document.getElementById('mascot-right-btn');
+        if(mascotRight) {
+            mascotRight.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.trigger(); 
+            });
+        }
     },
 
     selectMember(chip) {
+        if(!chip) return;
         const chips = document.querySelectorAll('.member-chip');
         chips.forEach(c => c.classList.remove('selected'));
         chip.classList.add('selected');
     },
 
     closeFullOverlay(id) { 
-        document.getElementById(id).style.display = 'none';
+        const overlay = document.getElementById(id);
+        if(overlay) overlay.style.display = 'none';
         if(id === 'overlay-view-log') {
-            document.getElementById('log-output-player').pause();
+            const player = document.getElementById('log-output-player');
+            if(player) player.pause();
         }
         if(id === 'overlay-landscape-camera') {
             clearInterval(this.videoRecordInterval); 
@@ -1957,13 +2123,15 @@ const App = {
     },
 
     submitLogCode() {
-        const code = document.getElementById('input-log-code').value.trim();
+        const inputField = document.getElementById('input-log-code');
+        const code = inputField ? inputField.value.trim() : '';
         if(!code) { alert("請輸入日誌代碼"); return; }
         alert(`成功加入代碼為 #${code} 的共享日誌！`);
         this.closeFullOverlay('overlay-join-log');
     },
 
     selectNoti(element, text) {
+        if(!element) return;
         const opts = document.querySelectorAll('.noti-opt');
         opts.forEach(o => o.classList.remove('selected'));
         element.classList.add('selected');
@@ -1971,8 +2139,10 @@ const App = {
 
     simulateIncomingNotification() {
         setTimeout(() => {
-            document.getElementById('lohas-bell-badge').style.display = 'block';
-            document.getElementById('noti-content').innerHTML = `✨ <b>阿明</b> 剛剛回應了您的每日手記，快連線看看！<br><small style="color:#666;">1分鐘前</small>`;
+            const bellBadge = document.getElementById('lohas-bell-badge');
+            const notiContent = document.getElementById('noti-content');
+            if(bellBadge) bellBadge.style.display = 'block';
+            if(notiContent) notiContent.innerHTML = `✨ <b>阿明</b> 剛剛回應了您的每日手記，快連線看看！<br><small style="color:#666;">1分鐘前</small>`;
         }, 3000);
     }
 };
